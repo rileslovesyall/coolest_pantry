@@ -6,7 +6,19 @@
   </head>
   <div class='container'>
     <body>
-      
+
+      <h1>Login</h1>
+      <form action='/login' method='post'>
+        <fieldset class='form-group'>
+          <label for='email'>Email</label>
+          <input class='form-control' for='email' id='email' name='email' type='email'>
+          <label for='password'>Password</label>
+          <input class='form-control' for='password' id='password' name='password' type='password'>
+        </fieldset>
+        <button class='btn btn-default' type='submit'>Submit</button>
+      </form>
+      <script type="text/javascript" src='/javascripts/login.js'></script>
+
     </body>
     <footer>
       <p>Some stuff for the footer.</p>
