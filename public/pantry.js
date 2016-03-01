@@ -45,6 +45,7 @@ var loadPantry = function () {
 };
 
 var viewItem = function (id) {
+  $('#header').text(localStorage.getItem('pantryitem' + id + 'Name'));
   $.ajax({
     type: "GET",
     url: "http://localhost:9393/api/v1/pantryitems/" + id,
@@ -56,7 +57,6 @@ var viewItem = function (id) {
       if (item['description'] !== null) {
         description += "<div class='pantryitem-show description'>" + item['description'] + "</div>";
       }
-      $('#header').text(localStorage.getItem('pantryitem' + id + 'Name'));
       var pantryitemHtml = description +
       "<div class='pantryitem-show exp-date'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
       "<div class='pantryitem-show quantity'> Available Quantity: " + item['quantity'] + "</div>" +
