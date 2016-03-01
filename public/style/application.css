@@ -3,12 +3,43 @@ body {
   margin: 0 auto;
 }
 
+.navbar {
+  margin-top: 8px;
+  padding-top: 8px;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid #BDBDBD;
+  font-size: 18px;
+}
+
+.nav-link {
+  color: #797C7D;
+}
+
+a {
+  color: black;
+}
+
 h1 {
   font-family: 'Special Elite', cursive;
 }
 
 th {
   font-family: 'Special Elite', cursive;
+  font-size: 22px;
+}
+
+.table>tbody>tr>td.td-not-button {
+  font-size: 16px;
+  padding-top: 13px;
+}
+
+.stock {
+  text-align: center;
+}
+
+.portion-size {
+  text-align: center;
 }
 
 .loading-message {
@@ -19,6 +50,10 @@ th {
 .pantryitem {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.show-pantry {
+  margin-top: 15px;
 }
 
 footer {

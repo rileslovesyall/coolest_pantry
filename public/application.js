@@ -11,17 +11,22 @@ var setNavbar = function () {
   var navbarHtml = "";
 
   if (localStorage.token === undefined) {
-    navbarHtml += "<a class='login'>Login</a> / ";
-    navbarHtml += "<a class='signup'>Sign Up</a>";
+    navbarHtml += "<a class='login nav-link'>Login / </a>";
+    navbarHtml += "<a class='signup nav-link'>Sign Up</a>";
   }
 
   if (localStorage.token !== undefined) {
-    navbarHtml += "<a class='pantry-link'>My Pantry</a> / ";
-    navbarHtml += "<a class='add-item'>Add Item / </a>";
-    navbarHtml += "<a class='logout'>Logout</a>";
+    navbarHtml += "<a class='pantry-link nav-link'>My Pantry / </a>";
+    navbarHtml += "<a class='add-item nav-link'>Add Item / </a>";
+    navbarHtml += "<a class='logout nav-link'>Logout</a>";
   }
 
   $('.navbar').html(navbarHtml);
+};
+
+var setFooter = function () {
+  var footerHtml = "<p>&copy; Riley Spicer 2016 -- <a href='http://rileyspicer.com' >rileyspicer.com</a> -- Ada Developer's Academy Capstone Project</p>";
+  $('.footer').html(footerHtml);
 };
 
 
@@ -29,6 +34,7 @@ $(document).ready(function () {
 
   setHead();
   setNavbar();
+  setFooter();
 
   $('.navbar').on('click', '.login', function () {
     document.location.href = '../lib/login.html';
@@ -40,7 +46,7 @@ $(document).ready(function () {
     localStorage.clear();
     document.location.href = '../lib/index.html';
   });
-  $('.navbar').on('click', '.pantry', function () {
+  $('.navbar').on('click', '.pantry-link', function () {
     document.location.href = '../lib/pantry.html';
   });
   $('.navbar').on('click', '.add-item', function () {
