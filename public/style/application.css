@@ -5,3 +5,8 @@ body {
 h1 {
   font-family: 'Special Elite', cursive;
 }
+
+.pantryitem {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
