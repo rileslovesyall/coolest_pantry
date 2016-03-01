@@ -36,8 +36,14 @@ var loadPantry = function () {
 var viewItem = function (id) {
   $.ajax({
     type: "GET",
-    url: "http://localhost:9393/api/v1/pantry_items/" + id,
-    headers: {'Authorization': token},
+    url: "http://localhost:9393/api/v1/pantryitems/" + id,
+    headers: {'Authorization': localStorage.token},
+    success: function (data) {
+      console.log(data);
+    }
+  })
+  .fail(function(data) {
+    console.log("Uh oh, this failed.");
   });
 };
 
@@ -45,8 +51,9 @@ $(document).ready(function () {
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
-  $('.pantry').on('click', '.item_name' ,function () {
-    console.log("I clicked a thing");
+  $('.pantry').on('click', '.item_name', function () {
+    var id = $(this).attr('id');
+    viewItem(id);
   });
 
   // load user's pantry
