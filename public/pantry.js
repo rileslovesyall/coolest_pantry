@@ -49,8 +49,9 @@ var viewItem = function (id) {
   .fail(function(data) {
     console.log("Uh oh, this failed.");
   });
+  $('.pantryitem').show();
   $('.pantry').hide();
-  $('.pantryitem').html("Your item is loading.");
+  $('.pantryitem').html("<div class='loading-message'>Your item is loading.</div>");
 };
 
 var addConsumeItem = function(id, action, quantity) {
@@ -88,14 +89,14 @@ $(document).ready(function () {
     var id = $(this).attr('id');
     addConsumeItem(id, 'add', 1);
   });
-
+  
   $('.pantry').on('click', '.consume', function() {
     var id = $(this).attr('id');
     addConsumeItem(id, 'consume', 1);
   });
 
-  $('pantryitem').on('click', '.showPantry', function () {
-    $(this).hide();
+  $('.pantryitem').on('click', '.showPantry', function () {
+    $('.pantryitem').hide();
     $('.pantry').show();
     loadPantry();
   });

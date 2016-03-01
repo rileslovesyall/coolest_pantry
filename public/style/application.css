@@ -11,6 +11,11 @@ th {
   font-family: 'Special Elite', cursive;
 }
 
+.loading-message {
+  text-align: center;
+  font-size: 24pt;
+}
+
 .pantryitem {
   margin-top: 5px;
   margin-bottom: 5px;
