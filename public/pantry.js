@@ -34,5 +34,6 @@ var loadPantry = function () {
 };
 
 $(document).ready(function () {
+  $('#header').text(localStorage.name + "'s Pantry");
   loadPantry();
 });
