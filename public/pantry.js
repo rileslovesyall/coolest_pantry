@@ -47,12 +47,12 @@ var viewItem = function (id) {
   });
 };
 
-var addConsumeItem = function(id, action) {
+var addConsumeItem = function(id, action, quantity) {
   $.ajax({
     type: "POST",
     url: "http://localhost:9393/api/v1/pantryitems/" + id + "/" + action ,
     headers: {'Authorization': localStorage.token},
-    data: 'quantity=1',
+    data: 'quantity=' + quantity,
     success: function (data) {
       if (data['error'] === undefined) {
         $('#'+id+'.stock').html(data['pantryitem']['quantity']);
@@ -77,12 +77,12 @@ $(document).ready(function () {
 
   $('.pantry').on('click', '.add', function() {
     var id = $(this).attr('id');
-    addConsumeItem(id, 'add');
+    addConsumeItem(id, 'add', 1);
   });
 
   $('.pantry').on('click', '.consume', function() {
     var id = $(this).attr('id');
-    addConsumeItem(id, 'consume');
+    addConsumeItem(id, 'consume', 1);
   });
 
   // load user's pantry
