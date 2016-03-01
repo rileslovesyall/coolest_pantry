@@ -42,7 +42,7 @@ var viewItem = function (id) {
       console.log(data);
       var item = data['pantryitem'];
       var pantryitemHtml = "<h3>"+ item["name"] +"</h3>" +
-      "<button class='showPantry'> Back to Pantry </button>";
+      "<button class='show-pantry btn btn-default'> Back to Pantry </button>";
       $('.pantryitem').html(pantryitemHtml);
     }
   })
@@ -95,7 +95,7 @@ $(document).ready(function () {
     addConsumeItem(id, 'consume', 1);
   });
 
-  $('.pantryitem').on('click', '.showPantry', function () {
+  $('.pantryitem').on('click', '.show-pantry', function () {
     $('.pantryitem').hide();
     $('.pantry').show();
     loadPantry();
