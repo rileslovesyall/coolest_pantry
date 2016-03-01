@@ -4,23 +4,21 @@ $(document).ready(function () {
 
   $.ajax({
     type:"GET",
-    // headers: {},
-    beforeSend: function (request)
-      { request.setRequestHeader('Authorization', token); },
+    headers: {'Authorization': token},
     url: "http://localhost:9393/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
         console.log(data);
     }
   })
   .done(function (data) {
-    console.log("done: "+ data);
+    var length = data['pantry_items'].length;
+    var pantryHtml = "";
+    for (i = 0; i < length; i++) {
+      var item  = data['pantry_items'][i];
+        pantryHtml += "<div class='pantryitem' id=" + item['id'] + "> Name: " +
+          item['name'] + "<br> Description: " + item['description'] + "</div>";
+    }
+    $('#pantry').html(pantryHtml);
   });
-
-  // $.ajax('http://foaas.com/donut/bri/riley', {
-  //   type: "GET",
-  //   success: function(data) {
-  //     console.log(data);
-  //   }
-  // });
 
 });
