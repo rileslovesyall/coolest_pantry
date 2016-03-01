@@ -11,13 +11,13 @@ var setNavbar = function () {
   var navbarHtml = "";
 
   if (localStorage.token === undefined) {
-    navbarHtml += "<a class='login nav-link'>Login / </a>";
+    navbarHtml += "<a class='login nav-link'>Login</a> / ";
     navbarHtml += "<a class='signup nav-link'>Sign Up</a>";
   }
 
   if (localStorage.token !== undefined) {
-    navbarHtml += "<a class='pantry-link nav-link'>My Pantry / </a>";
-    navbarHtml += "<a class='add-item nav-link'>Add Item / </a>";
+    navbarHtml += "<a class='pantry-link nav-link'>My Pantry</a> / ";
+    navbarHtml += "<a class='add-item nav-link'>Add Item</a> / ";
     navbarHtml += "<a class='logout nav-link'>Logout</a>";
   }
 
