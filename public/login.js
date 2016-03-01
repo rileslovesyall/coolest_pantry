@@ -7,10 +7,10 @@ $(document ).ready(function() {
       .done(function (data) {
         console.log(data);
         if (data['error'] === undefined) {
-          document.cookie = "token="+ data['token'];
-          document.cookie = "uid="+ data['uid'];
-          document.cookie = "name=" + data['name'];
-          document.location.href = '/pantry';
+          localStorage.token = data['token'];
+          localStorage.uid = data['uid'];
+          localStorage.firstName = data['name'];
+          document.location.href = './pantry.html';
         } else {
           console.log(data['error']);
         }

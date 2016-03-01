@@ -1,6 +1,6 @@
 $(document).ready(function () {
-  var uid = document.cookie.replace(/(?:(?:^|.*;\s*)uid\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-  var token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+  var uid = localStorage.uid;
+  var token = localStorage.token;
 
   $.ajax({
     type:"GET",
