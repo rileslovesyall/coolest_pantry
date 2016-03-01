@@ -54,7 +54,11 @@ var addItem = function (id) {
     headers: {'Authorization': localStorage.token},
     data: 'quantity=1',
     success: function (data) {
-      console.log(data);
+      if (data['error'] === undefined) {
+        $('#'+id+'.stock').html(data['pantryitem']['quantity']);
+      } else {
+        console.log(error);
+      }
     }
   })
   .fail(function(data) {
