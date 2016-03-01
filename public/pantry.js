@@ -47,13 +47,32 @@ var viewItem = function (id) {
   });
 };
 
+var addItem = function (id) {
+  console.log("Someday I'll add an item of id: "+id);
+};
+
+var consumeItem = function(id) {
+  console.log("An item is consumed");
+}
+
 $(document).ready(function () {
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
+  // set up on-click for any items that load within the pantry div
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
     viewItem(id);
+  });
+
+  $('.pantry').on('click', '.add', function() {
+    var id = $(this).attr('id');
+    addItem(id);
+  });
+
+  $('.pantry').on('click', '.consume', function() {
+    var id = $(this).attr('id');
+    consumeItem(id);
   });
 
   // load user's pantry
