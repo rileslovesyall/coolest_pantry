@@ -10,7 +10,7 @@ $(document ).ready(function() {
           localStorage.token = data['token'];
           localStorage.uid = data['uid'];
           localStorage.name = data['name'];
-          document.location.href = './pantry.html';
+          document.location.href = '../lib/pantry.html';
         } else {
           console.log(data['error']);
         }

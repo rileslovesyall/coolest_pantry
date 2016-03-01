@@ -30,17 +30,18 @@ $(document).ready(function () {
   setHead();
   setNavbar();
 
-  $('navbar').on('click', '.logout', function () {
-
+  $('.navbar').on('click', '.logout', function () {
+    localStorage.clear();
+    document.location.href = '../lib/index.html';
   });
-  $('navbar').on('click', '.login', function () {
-
+  $('.navbar').on('click', '.login', function () {
+    document.location.href = '../lib/login.html';
   });
-  $('navbar').on('click', '.pantry', function () {
-
+  $('.navbar').on('click', '.pantry', function () {
+    document.location.href = '../lib/pantry.html';
   });
-  $('navbar').on('click', '.add-item', function () {
-
+  $('.navbar').on('click', '.add-item', function () {
+    document.location.href = '../lib/pantryitem.html';
   });
 
 });
