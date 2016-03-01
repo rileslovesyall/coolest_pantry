@@ -1,4 +1,4 @@
-$(document).ready(function () {
+var loadPantry = function () {
   var uid = localStorage.uid;
   var token = localStorage.token;
 
@@ -9,7 +9,7 @@ $(document).ready(function () {
     success: function(data) {
         var length = data['pantry_items'].length;
         var pantryHtml = "";
-        pantryHtml += "<table id='pantry-table'><th>Item</th><th>Portion Size</th>" +
+        pantryHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
         "<th>Stock</th><th>Add More</th><th>Consume</th>";
         for (i = 0; i < length; i++) {
           var item  = data['pantry_items'][i];
@@ -31,5 +31,8 @@ $(document).ready(function () {
     console.log(data);
     console.log("Error, this failed.");
   });
+};
 
+$(document).ready(function () {
+  loadPantry();
 });
