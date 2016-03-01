@@ -47,10 +47,10 @@ var viewItem = function (id) {
   });
 };
 
-var addItem = function (id) {
+var addConsumeItem = function(id, action) {
   $.ajax({
     type: "POST",
-    url: "http://localhost:9393/api/v1/pantryitems/" + id + "/add" ,
+    url: "http://localhost:9393/api/v1/pantryitems/" + id + "/" + action ,
     headers: {'Authorization': localStorage.token},
     data: 'quantity=1',
     success: function (data) {
@@ -63,12 +63,7 @@ var addItem = function (id) {
   })
   .fail(function(data) {
     console.log("Uh oh, this failed.");
-  });
-};
-
-var consumeItem = function(id) {
-  console.log("An item is consumed");
-};
+  });};
 
 $(document).ready(function () {
   // set header with user's name
@@ -82,12 +77,12 @@ $(document).ready(function () {
 
   $('.pantry').on('click', '.add', function() {
     var id = $(this).attr('id');
-    addItem(id);
+    addConsumeItem(id, 'add');
   });
 
   $('.pantry').on('click', '.consume', function() {
     var id = $(this).attr('id');
-    consumeItem(id);
+    addConsumeItem(id, 'consume');
   });
 
   // load user's pantry
