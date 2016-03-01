@@ -12,12 +12,12 @@ var setNavbar = function () {
 
   if (localStorage.token === undefined) {
     navbarHtml += "<a class='login'>Login</a> / ";
+    navbarHtml += "<a class='signup'>Sign Up</a>";
   }
 
-  navbarHtml += "<a class='pantry-link'>My Pantry</a> / ";
-  navbarHtml += "<a class='add-item'>Add Item</a> / ";
-
   if (localStorage.token !== undefined) {
+    navbarHtml += "<a class='pantry-link'>My Pantry</a> / ";
+    navbarHtml += "<a class='add-item'>Add Item / </a>";
     navbarHtml += "<a class='logout'>Logout</a>";
   }
 
@@ -30,12 +30,15 @@ $(document).ready(function () {
   setHead();
   setNavbar();
 
+  $('.navbar').on('click', '.login', function () {
+    document.location.href = '../lib/login.html';
+  });
+  $('.navbar').on('click', '.signup', function () {
+    document.location.href = '../lib/signup.html';
+  });
   $('.navbar').on('click', '.logout', function () {
     localStorage.clear();
     document.location.href = '../lib/index.html';
-  });
-  $('.navbar').on('click', '.login', function () {
-    document.location.href = '../lib/login.html';
   });
   $('.navbar').on('click', '.pantry', function () {
     document.location.href = '../lib/pantry.html';
