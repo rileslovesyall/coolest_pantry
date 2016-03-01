@@ -48,12 +48,23 @@ var viewItem = function (id) {
 };
 
 var addItem = function (id) {
-  console.log("Someday I'll add an item of id: "+id);
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:9393/api/v1/pantryitems/" + id + "/add" ,
+    headers: {'Authorization': localStorage.token},
+    data: 'quantity=1',
+    success: function (data) {
+      console.log(data);
+    }
+  })
+  .fail(function(data) {
+    console.log("Uh oh, this failed.");
+  });
 };
 
 var consumeItem = function(id) {
   console.log("An item is consumed");
-}
+};
 
 $(document).ready(function () {
   // set header with user's name
