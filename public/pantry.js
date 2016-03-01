@@ -40,11 +40,17 @@ var viewItem = function (id) {
     headers: {'Authorization': localStorage.token},
     success: function (data) {
       console.log(data);
+      var item = data['pantryitem'];
+      var pantryitemHtml = "<h3>"+ item["name"] +"</h3>" +
+      "<button class='showPantry'> Back to Pantry </button>";
+      $('.pantryitem').html(pantryitemHtml);
     }
   })
   .fail(function(data) {
     console.log("Uh oh, this failed.");
   });
+  $('.pantry').hide();
+  $('.pantryitem').html("Your item is loading.");
 };
 
 var addConsumeItem = function(id, action, quantity) {
@@ -69,6 +75,9 @@ $(document).ready(function () {
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
+  // load user's pantry
+  loadPantry();
+
   // set up on-click for any items that load within the pantry div
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
@@ -85,7 +94,11 @@ $(document).ready(function () {
     addConsumeItem(id, 'consume', 1);
   });
 
-  // load user's pantry
-  loadPantry();
+  $('pantryitem').on('click', '.showPantry', function () {
+    $(this).hide();
+    $('.pantry').show();
+    loadPantry();
+  });
+
 
 });
