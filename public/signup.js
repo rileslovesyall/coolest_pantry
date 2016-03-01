@@ -2,7 +2,7 @@ $(document ).ready(function() {
   
     $('.btn').click(function (){
       event.preventDefault();
-      $.post('http://localhost:9393/api/v1/token',
+      $.post('http://localhost:9393/api/v1/users',
         $('form').serialize())
       .done(function (data) {
         console.log(data);
