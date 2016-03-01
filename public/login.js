@@ -16,11 +16,7 @@ $(document ).ready(function() {
         }
       })
       .fail(function (data){
-        console.log('failed');
+        console.log('This failed. I should probably do something different here.');
       });
-      // .always(function() {
-      //   console.log('always');
-      // });
-      console.log('this is the end of all this');
     });
 });

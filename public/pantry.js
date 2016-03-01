@@ -14,14 +14,14 @@ var loadPantry = function () {
         for (i = 0; i < length; i++) {
           var item  = data['pantry_items'][i];
             pantryHtml +="<tr>" +
-            "<td class='item_name' id="+item['id']+">" + item["name"] + "</td>" +
+            "<td>" + "<a class='item_name' id="+item['id']+">"+item["name"]+'</a>' + "</td>" +
             "<td class='portion_size' id="+item['id']+">" + "FILL ME" + "</td>" +
             "<td class='stock' id="+item['id']+">" + item["quantity"] + "</td>" +
             "<td class='add' id="+item['id']+">" + "ADD" + "</td>" +
             "<td class='consume' id="+item['id']+">" + "CONSUME" + "</td>" +
             "</tr>";
         }
-        $('#pantry').html(pantryHtml);
+        $('.pantry').html(pantryHtml);
     }
   })
   .done(function (data) {
@@ -33,7 +33,23 @@ var loadPantry = function () {
   });
 };
 
+var viewItem = function (id) {
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:9393/api/v1/pantry_items/" + id,
+    headers: {'Authorization': token},
+  });
+};
+
 $(document).ready(function () {
+  // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
+
+  $('.pantry').on('click', '.item_name' ,function () {
+    console.log("I clicked a thing");
+  });
+
+  // load user's pantry
   loadPantry();
+
 });
