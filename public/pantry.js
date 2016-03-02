@@ -26,7 +26,7 @@ var loadPantry = function () {
             "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
             "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
             "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-            "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> Consume </button" + "</td>" +
+            "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
             "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
             "</tr>";
           localStorage.setItem('pantryitem' + item['id'] + 'Name', item['name']);
@@ -35,12 +35,9 @@ var loadPantry = function () {
 
     }
   })
-  .done(function (data) {
-    console.log('done');
-  })
   .fail(function (data) {
-    console.log(data);
     console.log("Error, this failed.");
+    $('.flash').text("Uh oh, this failed. Please try again.");
   });
 };
 
@@ -77,7 +74,7 @@ var viewItem = function (id) {
 var addConsumeItem = function(id, action, quantity) {
   $.ajax({
     type: "POST",
-    url: "http://localhost:9393/api/v1/pantryitems/" + id + "/" + action ,
+    url: "http://localhost:9393/api/v1/pantryitem/" + id + "/" + action ,
     headers: {'Authorization': localStorage.token},
     data: 'quantity=' + quantity,
     success: function (data) {
@@ -85,13 +82,14 @@ var addConsumeItem = function(id, action, quantity) {
         $('#'+id+'.quantity').text(data['pantryitem']['quantity']);
         $('#'+id+'.quantity-show').text("Available Quantity: "+ data['pantryitem']['quantity']);
       } else {
-        console.log(error);
         $('.flash').text(error['message']);
       }
     }
   })
   .fail(function(data) {
-    console.log("Uh oh, this failed.");
+    console.log('This failed.');
+    $('.flash').show();
+    $('.flash').text("Uh oh, this failed. Please try again.");
   });};
 
 $(document).ready(function () {
@@ -103,6 +101,10 @@ $(document).ready(function () {
   loadPantry();
 
   // set up on-click for any items that load within the pantry div
+  $(document).click(function () {
+    $('.flash').hide();
+  });
+
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
     viewItem(id);
