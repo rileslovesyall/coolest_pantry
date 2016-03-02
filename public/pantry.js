@@ -94,6 +94,11 @@ var addConsumeItem = function(id, action, quantity) {
 
 $(document).ready(function () {
 
+  // hide flash div on click if it's been displayed
+  $(document).click(function () {
+    $('.flash').hide();
+  });
+
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
@@ -101,9 +106,6 @@ $(document).ready(function () {
   loadPantry();
 
   // set up on-click for any items that load within the pantry div
-  $(document).click(function () {
-    $('.flash').hide();
-  });
 
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
