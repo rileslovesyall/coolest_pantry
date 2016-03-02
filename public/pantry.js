@@ -62,10 +62,6 @@ var loadPantryAPI = function () {
       localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
       if (!(isSameSet(data['pantry_items'], itemsArr))) {
         localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
-        console.log(localStorage.getItem('pantryitems'));
-        console.log('storing those now');
-      } else {
-        console.log('those two match');
       }
     }
   })
@@ -139,7 +135,9 @@ $(document).ready(function () {
 
  
   // quickload from localStorage
-  loadPantryLocalStorage();
+  if (localStorage.getItem('pantryitems') !== null) {
+    loadPantryLocalStorage();
+  }
 
   // load user's pantry
   loadPantryAPI();
