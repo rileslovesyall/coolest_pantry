@@ -16,9 +16,10 @@ var addItemForm = function () {
         "<div class='form-note'>(please separate with a comma)</div>" +
         "<input class='form-control' for='ingredients' id='ingredients' name='ingredients'>" +
       "</fieldset>" +
-      "<button class='submit btn btn-default'>Submit</button>" +
+      "<button class='submit btn btn-default' type='submit'>Submit</button>" +
     "</form>";
   $('.formHolder').html(formHtml);
+  $('h1').text('Add an Item');
 };
 
 $(document).ready(function () {
