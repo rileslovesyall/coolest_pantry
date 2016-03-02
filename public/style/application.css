@@ -1,6 +1,7 @@
 body {
   font-family: 'Nixie One', sans-serif;
   margin: 0 auto;
+  font-size: 18px;
 }
 
 .navbar {
@@ -36,7 +37,7 @@ th {
   padding-top: 13px;
 }
 
-.stock {
+.quantity {
   text-align: center;
 }
 
@@ -52,13 +53,29 @@ th {
 .pantryitem {
   margin-top: 5px;
   margin-bottom: 5px;
+  width: 600px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.description {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.add {
+  margin-top: 25px;
+  margin-right: 10px;
+}
+
+.consume-show {
+  margin-top: 25px;
+  margin-left: 10px;
 }
 
 .show-pantry {
-  margin-top: 15px;
+  margin-top: 25px;
 }
-
-
 
 footer {
   margin-top: 30px;

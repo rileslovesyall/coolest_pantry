@@ -25,7 +25,7 @@ var loadPantry = function () {
             pantryHtml +="<tr>" +
             "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
             "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
-            "<td class='stock td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
+            "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
             "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> Consume </button" + "</td>" +
             "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
             "</tr>";
@@ -58,9 +58,11 @@ var viewItem = function (id) {
         description += "<div class='pantryitem-show description'>" + item['description'] + "</div>";
       }
       var pantryitemHtml = description +
-      "<div class='pantryitem-show exp-date'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
-      "<div class='pantryitem-show quantity'> Available Quantity: " + item['quantity'] + "</div>" +
-      "<button class='show-pantry btn btn-default'> Back to Pantry </button>";
+        "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
+        "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
+        "<button class='add btn btn-default' id="+id+"> Quick Add </button>" +
+        "<button class='show-pantry btn btn-default'> Back to Pantry </button>" +
+        "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>";
       $('.pantryitem').html(pantryitemHtml);
     }
   })
@@ -80,7 +82,8 @@ var addConsumeItem = function(id, action, quantity) {
     data: 'quantity=' + quantity,
     success: function (data) {
       if (data['error'] === undefined) {
-        $('#'+id+'.stock').html(data['pantryitem']['quantity']);
+        $('#'+id+'.quantity').text(data['pantryitem']['quantity']);
+        $('#'+id+'.quantity-show').text("Available Quantity: "+ data['pantryitem']['quantity']);
       } else {
         console.log(error);
       }
@@ -91,6 +94,7 @@ var addConsumeItem = function(id, action, quantity) {
   });};
 
 $(document).ready(function () {
+
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
@@ -100,17 +104,20 @@ $(document).ready(function () {
   // set up on-click for any items that load within the pantry div
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
-    var name = $(this).val();
-    console.log(name);
     viewItem(id);
-  });
-
-  $('.pantry').on('click', '.add', function() {
-    var id = $(this).attr('id');
-    addConsumeItem(id, 'add', 1);
   });
   
   $('.pantry').on('click', '.consume', function() {
+    var id = $(this).attr('id');
+    addConsumeItem(id, 'consume', 1);
+  });
+
+  $('.pantryitem').on('click', '.add', function() {
+    var id = $(this).attr('id');
+    addConsumeItem(id, 'add', 1);
+  });
+
+  $('.pantryitem').on('click', '.consume', function() {
     var id = $(this).attr('id');
     addConsumeItem(id, 'consume', 1);
   });
