@@ -129,7 +129,7 @@ $(document).ready(function () {
   $('.navbar').on('click', '.add-item', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
-    $('.form').show();
+    $('.item-form').show();
     displayAddItemForm();
   });
 
