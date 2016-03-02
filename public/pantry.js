@@ -10,6 +10,22 @@ var isSameSet = function(arr1, arr2){
   return  $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0;
 };
 
+var findItemFromLocalStorage = function(id) {
+  var items = JSON.parse(localStorage.getItem('pantryitems'));
+  var found = false;
+  var item;
+  while (!found) {
+    for (i = 0; i < items.length; i++) {
+      if (items[i]['id'] === Number(id)) {
+        found = true;
+        console.log(items[i]);
+        item = items[i];
+      }
+    }
+  }
+  return item;
+};
+
 var loadPantryLocalStorage = function () {
   var items = JSON.parse(localStorage.getItem('pantryitems'));
   var tempHtml = "";
@@ -73,7 +89,8 @@ var loadPantryAPI = function () {
 };
 
 var viewItem = function (id) {
-  $('#header').text(localStorage.getItem('pantryitem' + id + 'Name'));
+
+  // ajax call to get latest data
   $.ajax({
     type: "GET",
     url: "http://localhost:9393/api/v1/pantryitems/" + id,
@@ -97,9 +114,29 @@ var viewItem = function (id) {
   .fail(function(data) {
     console.log("Uh oh, this failed.");
   });
-  $('.pantryitem').show();
+
+  // hide pantry div, display pantryitem div, set loading message / new header
   $('.pantry').hide();
+  $('.pantryitem').show();
   $('.pantryitem').html("<div class='loading-message'>Your item is loading.</div>");
+
+  var currItem = findItemFromLocalStorage(id);
+  $('#header').text(currItem['name']);
+
+  // pull info from localStorage
+  var description = "";
+  if (currItem['description'] !== null) {
+    description += "<div class='pantryitem-show description-show'>" + currItem['description'] + "</div>";
+  }
+  var tempHtml = description +
+    "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(currItem['expiration_date']) + "</div>" +
+    "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
+    "<button class='add btn btn-default' id="+id+"> Quick Add </button>" +
+    "<button class='show-pantry btn btn-default'> Back to Pantry </button>" +
+    "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>";
+  $('.pantryitem').html(tempHtml);
+
+
 };
 
 var addConsumeItem = function(id, action, quantity) {
