@@ -26,6 +26,13 @@ var findItemFromLocalStorage = function(id) {
   return item;
 };
 
+var storeEachToLocalStorage = function (pantryitemArr) {
+  for (var i = 0; i < pantryitemArr.length; i++) {
+    var item = pantryitemArr[i];
+    localStorage.setItem('pantryitem' + item['id'], JSON.stringify(item));
+  }
+};
+
 var loadPantryLocalStorage = function () {
   var items = JSON.parse(localStorage.getItem('pantryitems'));
   var tempHtml = "";
@@ -74,11 +81,10 @@ var loadPantryAPI = function () {
       }
       pantryHtml += "</table>";
       $('.pantry').html(pantryHtml);
-      // var storedIds = JSON.parse(localStorage.getItem('pantryIdArr'));
+
+      // reset localStorage to most up-to-date data
       localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
-      if (!(isSameSet(data['pantry_items'], itemsArr))) {
-        localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
-      }
+      storeEachToLocalStorage(itemsArr);
     }
   })
   .fail(function (data) {
@@ -96,11 +102,10 @@ var viewItem = function (id) {
     url: "http://localhost:9393/api/v1/pantryitems/" + id,
     headers: {'Authorization': localStorage.token},
     success: function (data) {
-      console.log(data);
       var item = data['pantryitem'];
       var description = "";
       if (item['description'] !== null) {
-        description += "<div class='pantryitem-show description'>" + item['description'] + "</div>";
+        description += "<div class='pantryitem-show description-show'>" + item['description'] + "</div>";
       }
       var pantryitemHtml = description +
         "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
@@ -120,7 +125,8 @@ var viewItem = function (id) {
   $('.pantryitem').show();
   $('.pantryitem').html("<div class='loading-message'>Your item is loading.</div>");
 
-  var currItem = findItemFromLocalStorage(id);
+  // get current item from local Storage and set header
+  var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
   $('#header').text(currItem['name']);
 
   // pull info from localStorage
@@ -140,6 +146,7 @@ var viewItem = function (id) {
 };
 
 var addConsumeItem = function(id, action, quantity) {
+  // make AJAX call to check data against API
   $.ajax({
     type: "POST",
     url: "http://localhost:9393/api/v1/pantryitems/" + id + "/" + action ,
@@ -150,6 +157,7 @@ var addConsumeItem = function(id, action, quantity) {
         $('#'+id+'.quantity').text(data['pantryitem']['quantity']);
         $('#'+id+'.quantity-show').text("Available Quantity: "+ data['pantryitem']['quantity']);
       } else {
+        $('.flash').show();
         $('.flash').text(error['message']);
       }
     }
@@ -158,7 +166,23 @@ var addConsumeItem = function(id, action, quantity) {
     console.log('This failed.');
     $('.flash').show();
     $('.flash').text("Uh oh, this failed. Please try again.");
-  });};
+  });
+
+  // update from localStorage for quicker display
+  var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
+
+  if (action === 'add') {
+    currItem['quantity'] += 1;
+
+  } else if (action === 'consume') {
+    currItem['quantity'] -= 1;
+  }
+
+  localStorage.setItem('pantryitem' + id, JSON.stringify(currItem));
+
+  $('#'+id+'.quantity').text(currItem['quantity']);
+  $('#'+id+'.quantity-show').text("Available Quantity: " + currItem['quantity']);
+};
 
 $(document).ready(function () {
 
