@@ -6,7 +6,31 @@ var cleanDate = function(dateString) {
   return month + '/' + day + '/' + year;
 };
 
-var loadPantry = function () {
+var isSameSet = function(arr1, arr2){
+  return  $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0;
+};
+
+var loadPantryLocalStorage = function () {
+  var items = JSON.parse(localStorage.getItem('pantryitems'));
+  console.log(items);
+  // var tempHtml = "";
+  // tempHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
+  // "<th>Stock</th><th>Consume</th><th>Exp. Date</th>";
+  // for (i=0; i<ids.length;i++) {
+  //   var expDate = cleanDate(localStorage.getItem('pantryitem' + ids[i] + 'ExpDate'));
+  //     tempHtml +="<tr>" +
+  //     "<td class='item_name td-not-button' id="+ids[i]+">" + "<a>"+localStorage.getItem('pantryitem' + ids[i] + 'Name')+'</a>' + "</td>" +
+  //     "<td class='portion-size td-not-button' id="+ids[i]+">" + localStorage.getItem('pantryitem' + ids[i] + 'PortionSize') + "</td>" +
+  //     "<td class='quantity td-not-button' id="+ids[i]+">" + localStorage.getItem('pantryitem' + ids[i] + 'Quantity') + "</td>" +
+  //     "<td class='consume' id="+ids[i]+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
+  //     "<td class='exp-date td-not-button' id="+ids[i]+">" + expDate + "</td>" +
+  //     "</tr>";
+  // }
+  // tempHtml += "</table>";
+  // $('.pantry').html(tempHtml);
+};
+
+var loadPantryFromAPI = function () {
   var uid = localStorage.uid;
   var token = localStorage.token;
 
@@ -15,30 +39,41 @@ var loadPantry = function () {
     headers: {'Authorization': token},
     url: "http://localhost:9393/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
-        var length = data['pantry_items'].length;
-        var pantryHtml = "";
-        pantryHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
-        "<th>Stock</th><th>Consume</th><th>Exp. Date</th>";
-        for (i = 0; i < length; i++) {
-          var item  = data['pantry_items'][i];
-          var expDate = cleanDate(item['expiration_date']);
-            pantryHtml +="<tr>" +
-            "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
-            "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
-            "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-            "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
-            "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
-            "</tr>";
-          localStorage.setItem('pantryitem' + item['id'] + 'Name', item['name']);
-        }
-        $('.pantry').html(pantryHtml);
-
+      var length = data['pantry_items'].length;
+      var pantryHtml = "";
+      var itemsArr = [];
+      pantryHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
+      "<th>Quantity</th><th>Consume</th><th>Exp. Date</th>";
+      for (i = 0; i < length; i++) {
+        var item  = data['pantry_items'][i];
+        itemsArr.push(item);
+        var expDate = cleanDate(item['expiration_date']);
+        pantryHtml += "<tr>" +
+          "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
+          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
+          "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
+          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
+          "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
+          "</tr>";
+      }
+      pantryHtml += "</table>";
+      $('.pantry').html(pantryHtml);
+      // var storedIds = JSON.parse(localStorage.getItem('pantryIdArr'));
+      localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
+      if (!(isSameSet(data['pantry_items'], itemsArr))) {
+        localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
+        console.log(localStorage.getItem('pantryitems'));
+        console.log('storing those now');
+      } else {
+        console.log('those two match');
+      }
     }
   })
   .fail(function (data) {
     console.log("Error, this failed.");
     $('.flash').text("Uh oh, this failed. Please try again.");
   });
+  
 };
 
 var viewItem = function (id) {
@@ -102,8 +137,14 @@ $(document).ready(function () {
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
+  // check to load from LocalStorage if available
+  // if (localStorage.getItem('pantryitems') !== null) {
+  //   loadPantryLocalStorage();
+  // }
+
   // load user's pantry
-  loadPantry();
+  loadPantryFromAPI();
+
 
   // set up on-click for any items that load within the pantry div
 

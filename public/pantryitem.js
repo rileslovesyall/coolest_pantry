@@ -22,6 +22,10 @@ var addItemForm = function () {
   $('h1').text('Add an Item');
 };
 
+var editItemForm = function (id) {
+
+};
+
 $(document).ready(function () {
   addItemForm();
 

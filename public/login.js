@@ -15,6 +15,7 @@ var submitLogin = function () {
       }
     })
     .fail(function (data){
+      console.log(data);
       console.log('This failed. I should probably do something different here.');
     });
   });
