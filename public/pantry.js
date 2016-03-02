@@ -12,25 +12,25 @@ var isSameSet = function(arr1, arr2){
 
 var loadPantryLocalStorage = function () {
   var items = JSON.parse(localStorage.getItem('pantryitems'));
-  console.log(items);
-  // var tempHtml = "";
-  // tempHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
-  // "<th>Stock</th><th>Consume</th><th>Exp. Date</th>";
-  // for (i=0; i<ids.length;i++) {
-  //   var expDate = cleanDate(localStorage.getItem('pantryitem' + ids[i] + 'ExpDate'));
-  //     tempHtml +="<tr>" +
-  //     "<td class='item_name td-not-button' id="+ids[i]+">" + "<a>"+localStorage.getItem('pantryitem' + ids[i] + 'Name')+'</a>' + "</td>" +
-  //     "<td class='portion-size td-not-button' id="+ids[i]+">" + localStorage.getItem('pantryitem' + ids[i] + 'PortionSize') + "</td>" +
-  //     "<td class='quantity td-not-button' id="+ids[i]+">" + localStorage.getItem('pantryitem' + ids[i] + 'Quantity') + "</td>" +
-  //     "<td class='consume' id="+ids[i]+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
-  //     "<td class='exp-date td-not-button' id="+ids[i]+">" + expDate + "</td>" +
-  //     "</tr>";
-  // }
-  // tempHtml += "</table>";
-  // $('.pantry').html(tempHtml);
+  var tempHtml = "";
+  tempHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
+  "<th>Quantity</th><th>Consume</th><th>Exp. Date</th>";
+  for (i=0; i<items.length;i++) {
+    var item = items[i];
+    var expDate = cleanDate(item['expiration_date']);
+      tempHtml += "<tr>" +
+          "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
+          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
+          "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
+          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
+          "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
+          "</tr>";
+  }
+  tempHtml += "</table>";
+  $('.pantry').html(tempHtml);
 };
 
-var loadPantryFromAPI = function () {
+var loadPantryAPI = function () {
   var uid = localStorage.uid;
   var token = localStorage.token;
 
@@ -137,13 +137,12 @@ $(document).ready(function () {
   // set header with user's name
   $('#header').text(localStorage.name + "'s Pantry");
 
-  // check to load from LocalStorage if available
-  // if (localStorage.getItem('pantryitems') !== null) {
-  //   loadPantryLocalStorage();
-  // }
+ 
+  // quickload from localStorage
+  loadPantryLocalStorage();
 
   // load user's pantry
-  loadPantryFromAPI();
+  loadPantryAPI();
 
 
   // set up on-click for any items that load within the pantry div
