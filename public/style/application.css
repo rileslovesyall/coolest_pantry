@@ -18,6 +18,15 @@ body {
   color: #797C7D;
 }
 
+.flash {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 3px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #BDBDBD;
+}
+
 a {
   color: black;
 }

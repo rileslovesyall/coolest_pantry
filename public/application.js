@@ -36,6 +36,8 @@ $(document).ready(function () {
   setNavbar();
   setFooter();
 
+  $('.flash').hide();
+
   $('.navbar').on('click', '.login', function () {
     document.location.href = '../lib/login.html';
   });

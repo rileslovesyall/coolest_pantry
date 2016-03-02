@@ -86,6 +86,7 @@ var addConsumeItem = function(id, action, quantity) {
         $('#'+id+'.quantity-show').text("Available Quantity: "+ data['pantryitem']['quantity']);
       } else {
         console.log(error);
+        $('.flash').text(error['message']);
       }
     }
   })
