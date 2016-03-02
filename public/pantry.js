@@ -60,7 +60,6 @@ var viewItem = function (id) {
       var pantryitemHtml = description +
       "<div class='pantryitem-show exp-date'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
       "<div class='pantryitem-show quantity'> Available Quantity: " + item['quantity'] + "</div>" +
-      // "<div class='pantryitem-show' add-button>" + "<button class='btn btn-default'>Add</button>" + "</div>" +
       "<button class='show-pantry btn btn-default'> Back to Pantry </button>";
       $('.pantryitem').html(pantryitemHtml);
     }
