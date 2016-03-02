@@ -1,3 +1,7 @@
+//
+// HELPER METHODS
+// 
+
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
   var day = date.getDate();
@@ -6,31 +10,40 @@ var cleanDate = function(dateString) {
   return month + '/' + day + '/' + year;
 };
 
-var isSameSet = function(arr1, arr2){
-  return  $(arr1).not(arr2).length === 0 && $(arr2).not(arr1).length === 0;
-};
-
-var findItemFromLocalStorage = function(id) {
-  var items = JSON.parse(localStorage.getItem('pantryitems'));
-  var found = false;
-  var item;
-  while (!found) {
-    for (i = 0; i < items.length; i++) {
-      if (items[i]['id'] === Number(id)) {
-        found = true;
-        console.log(items[i]);
-        item = items[i];
-      }
-    }
-  }
-  return item;
-};
+// var findItemFromLocalStorage = function(id) {
+//   var items = JSON.parse(localStorage.getItem('pantryitems'));
+//   var found = false;
+//   var item;
+//   while (!found) {
+//     for (i = 0; i < items.length; i++) {
+//       if (items[i]['id'] === Number(id)) {
+//         found = true;
+//         console.log(items[i]);
+//         item = items[i];
+//       }
+//     }
+//   }
+//   return item;
+// };
 
 var storeEachToLocalStorage = function (pantryitemArr) {
   for (var i = 0; i < pantryitemArr.length; i++) {
     var item = pantryitemArr[i];
     localStorage.setItem('pantryitem' + item['id'], JSON.stringify(item));
   }
+};
+
+// 
+// PANTRY DISPLAY METHODS
+// 
+
+var displayPantry = function () {
+  $('.pantry').show();
+  $('#header').text(localStorage.getItem('name') + "'s Pantry");
+  if (localStorage.getItem('pantryitems') !== null) {
+    loadPantryLocalStorage();
+  }
+  loadPantryAPI();
 };
 
 var loadPantryLocalStorage = function () {
@@ -93,6 +106,10 @@ var loadPantryAPI = function () {
   });
   
 };
+
+// 
+//  SHOW PAGE METHODS
+// 
 
 var viewItem = function (id) {
 
@@ -184,6 +201,7 @@ var addConsumeItem = function(id, action, quantity) {
   $('#'+id+'.quantity-show').text("Available Quantity: " + currItem['quantity']);
 };
 
+
 $(document).ready(function () {
 
   // hide flash div on click if it's been displayed
@@ -191,20 +209,11 @@ $(document).ready(function () {
     $('.flash').hide();
   });
 
-  // set header with user's name
-  $('#header').text(localStorage.name + "'s Pantry");
-
- 
-  // quickload from localStorage
-  if (localStorage.getItem('pantryitems') !== null) {
-    loadPantryLocalStorage();
-  }
-
-  // load user's pantry
-  loadPantryAPI();
+  // load User Pantry
+  displayPantry();
 
 
-  // set up on-click for any items that load within the pantry div
+  // PANTRY DIV
 
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
@@ -215,6 +224,8 @@ $(document).ready(function () {
     var id = $(this).attr('id');
     addConsumeItem(id, 'consume', 1);
   });
+
+  // PANTRYITEM SHOW DIV
 
   $('.pantryitem').on('click', '.add', function() {
     var id = $(this).attr('id');
@@ -228,10 +239,16 @@ $(document).ready(function () {
 
   $('.pantryitem').on('click', '.show-pantry', function () {
     $('.pantryitem').hide();
-    $('.pantry').show();
-    $('#header').text(localStorage.name + "'s Pantry");
-    loadPantry();
+    displayPantry();
   });
+
+  // FORMHOLDER DIV
+
+  // $('.formHolder').on('click', '.submit', function () {
+  //   event.preventDefault();
+  //   console.log('form is done.');
+  //   console.log($('form.addForm').serialize());
+  // });
 
 
 });

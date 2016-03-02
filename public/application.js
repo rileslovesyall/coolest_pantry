@@ -29,6 +29,78 @@ var setFooter = function () {
   $('.footer').html(footerHtml);
 };
 
+//
+//  FORM METHODS
+//
+
+var displayAddItemForm = function (id) {
+  var formHtml =
+    "<form class='addForm'>" +
+      "<fieldset class='form-group'>" +
+        "<label for='name'>Name: </label>" +
+        "<input class='form-control' for='name' id='name' type='text' name='name' required>" +
+        "<label for='description'>Description </label>" +
+        "<input class='form-control for='description' id='description' name='description'>" +
+        "<label for='portion-size'>Portion Size: </label>" +
+        "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
+        "<input class='form-control' name = 'portion-size' for='portion-size' id='portion-size' required>" +
+        "<label for='quantity'>Quantity: </label> " +
+        "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required>" +
+        "<label for='ingredients'>Ingredients: </label>" +
+        "<div class='form-note'>(please separate with a comma)</div>" +
+        "<input class='form-control' for='ingredients' id='ingredients' name='ingredients'>" +
+      "</fieldset>" +
+      "<button class='addItem btn btn-default' type='submit'>Submit</button>" +
+    "</form>";
+  $('.form').html(formHtml);
+  $('#header').text('Add an Item');
+};
+
+var submitItem = function (type) {
+  if (type === 'add') {
+    console.log($('.addForm').serialize);
+    console.log('add form');
+  } else if (type === 'edit') {
+    console.log('update form');
+  }
+};
+
+var displayLoginForm = function () {
+  var formHtml =
+  "<form>" +
+    "<fieldset class='form-group'>" +
+      "<label for='email'>Email: </label>" +
+      "<input class='form-control' for='email' id='email' name='email' type='email'>" +
+      "<label for='password'>Password: </label>" +
+      "<input class='form-control' for='password' id='password' name='password' type='password'>" +
+    "</fieldset>" +
+    "<button class='btn btn-default login'>Submit</button>" +
+  "</form>";
+  $('.form').html(formHtml);
+  $('#header').text('Login');
+};
+
+var submitLogin = function () {
+  event.preventDefault();
+  $.post('http://localhost:9393/api/v1/token',
+    $('form').serialize())
+  .done(function (data) {
+    console.log(data);
+    if (data['error'] === undefined) {
+      localStorage.token = data['token'];
+      localStorage.uid = data['uid'];
+      localStorage.name = data['name'];
+      document.location.href = '../lib/pantry.html';
+    } else {
+      console.log(data['error']);
+    }
+  })
+  .fail(function (data){
+    console.log(data);
+    console.log('This failed. I should probably do something different here.');
+  });
+};
+
 
 $(document).ready(function () {
 
@@ -39,7 +111,10 @@ $(document).ready(function () {
   $('.flash').hide();
 
   $('.navbar').on('click', '.login', function () {
-    document.location.href = '../lib/login.html';
+    $('.pantry').hide();
+    $('.pantryitem').hide();
+    $('.form').show();
+    displayLoginForm();
   });
   $('.navbar').on('click', '.signup', function () {
     document.location.href = '../lib/signup.html';
@@ -52,7 +127,18 @@ $(document).ready(function () {
     document.location.href = '../lib/pantry.html';
   });
   $('.navbar').on('click', '.add-item', function () {
-    document.location.href = '../lib/pantryitem.html';
+    $('.pantry').hide();
+    $('.pantryitem').hide();
+    $('.form').show();
+    displayAddItemForm();
+  });
+
+  $('.form').on('click', '.login', function () {
+    submitLogin();
+  });
+  $('.form').on('click', '.addItem', function () {
+    submitItem('add');
+    $('.form').hide();
   });
 
 });
