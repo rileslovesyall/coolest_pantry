@@ -74,7 +74,7 @@ var viewItem = function (id) {
 var addConsumeItem = function(id, action, quantity) {
   $.ajax({
     type: "POST",
-    url: "http://localhost:9393/api/v1/pantryitem/" + id + "/" + action ,
+    url: "http://localhost:9393/api/v1/pantryitems/" + id + "/" + action ,
     headers: {'Authorization': localStorage.token},
     data: 'quantity=' + quantity,
     success: function (data) {
