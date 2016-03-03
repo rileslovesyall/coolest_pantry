@@ -453,8 +453,7 @@ $(document).ready(function () {
   setNavbar();
   setFooter();
   $('.flash').hide();
-  displaySplash();
-  // $('.splash').hide();
+  $('.splash').hide();
 
   // load login
   // CHANGE THIS TO BE SPLASH PAGE
@@ -463,6 +462,23 @@ $(document).ready(function () {
   } else {
     displaySplash();
   }
+
+  // SPLASH DIV
+  $('.splash').on('click', '#splash-login', function () {
+    $('.pantry').hide();
+    $('.pantryitem').hide();
+    $('.splash').hide();
+    $('.navbar').show();
+    displayLoginForm();
+  });
+
+  $('.splash').on('click', '#splash-signup', function () {
+    $('.pantry').hide();
+    $('.pantryitem').hide();
+    $('.splash').hide();
+    $('.navbar').show();
+    displaySignupForm();
+  });
 
 
   // NAVBAR DIV
@@ -486,7 +502,7 @@ $(document).ready(function () {
     $('.form-holder').hide();
     $('#header').hide();
     setNavbar();
-    // $('.splash').show();
+    displaySplash();
 
   });
 
