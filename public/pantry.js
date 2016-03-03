@@ -219,7 +219,11 @@ var loadPantryLocalStorage = function () {
           "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
           "</tr>";
   }
-  tempHtml += "</table>";
+  if (length === 0) {
+    tempHtml = "<h3>You don't have any items yet. Add some to get started.</h3>";
+  } else {
+    tempHtml += "</table>";
+  }
   $('.pantry').html(tempHtml);
 };
 
