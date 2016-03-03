@@ -35,31 +35,51 @@ var setFooter = function () {
 
 var displayAddItemForm = function (id) {
   var formHtml =
-    "<form class='addForm'>" +
+    "<form class='add-form'>" +
       "<fieldset class='form-group'>" +
         "<label for='name'>Name: </label>" +
         "<input class='form-control' for='name' id='name' type='text' name='name' required>" +
         "<label for='description'>Description </label>" +
         "<input class='form-control for='description' id='description' name='description'>" +
-        "<label for='portion-size'>Portion Size: </label>" +
+        "<label for='portion'>Portion Size: </label>" +
         "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
-        "<input class='form-control' name = 'portion-size' for='portion-size' id='portion-size' required>" +
+        "<input class='form-control' name = 'portion' for='portion' id='portion' required>" +
         "<label for='quantity'>Quantity: </label> " +
         "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required>" +
         "<label for='ingredients'>Ingredients: </label>" +
         "<div class='form-note'>(please separate with a comma)</div>" +
         "<input class='form-control' for='ingredients' id='ingredients' name='ingredients'>" +
       "</fieldset>" +
-      "<button class='addItem btn btn-default' type='submit'>Submit</button>" +
+      "<button class='submit-add-item btn btn-default'>Submit</button>" +
     "</form>";
-  $('.form').html(formHtml);
+  $('.item-form').html(formHtml);
   $('#header').text('Add an Item');
 };
 
 var submitItem = function (type) {
+  var token = localStorage.getItem('token');
+  event.preventDefault();
   if (type === 'add') {
-    console.log($('.addForm').serialize);
-    console.log('add form');
+    console.log($('.add-form').serialize());
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:9393/api/v1/pantryitems',
+      headers: {'Authorization': token},
+      data: $('.add-form').serialize(),
+      // dataType: "json",
+      success: function(data) {
+        console.log(data);
+        console.log('succeeded!');
+        }
+      })
+    .done(function (data) {
+      $('.item-form').hide();
+      displayPantry();
+    })
+    .fail (function(data) {
+      console.log("Failed");
+      console.log(data);
+    });
   } else if (type === 'edit') {
     console.log('update form');
   }
@@ -136,9 +156,11 @@ $(document).ready(function () {
   $('.form').on('click', '.login', function () {
     submitLogin();
   });
-  $('.form').on('click', '.addItem', function () {
+
+  $('.item-form').on('click', '.submit-add-item', function () {
     submitItem('add');
-    $('.form').hide();
+    // window.setTimeout($('.item-form').hide(), 1000);
+    // window.setTimeout(displayPantry, 1500);
   });
 
 });

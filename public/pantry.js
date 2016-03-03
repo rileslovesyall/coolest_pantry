@@ -39,6 +39,7 @@ var storeEachToLocalStorage = function (pantryitemArr) {
 
 var displayPantry = function () {
   $('.pantry').show();
+  $('.pantry').html("<div class='loading-message'>Hold tight. Your pantry is loading.</div>");
   $('#header').text(localStorage.getItem('name') + "'s Pantry");
   if (localStorage.getItem('pantryitems') !== null) {
     loadPantryLocalStorage();
@@ -56,7 +57,7 @@ var loadPantryLocalStorage = function () {
     var expDate = cleanDate(item['expiration_date']);
       tempHtml += "<tr>" +
           "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
-          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
+          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
           "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
           "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
           "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
@@ -86,7 +87,7 @@ var loadPantryAPI = function () {
         var expDate = cleanDate(item['expiration_date']);
         pantryHtml += "<tr>" +
           "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
-          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion_size"] + "</td>" +
+          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
           "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
           "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
           "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
@@ -102,6 +103,7 @@ var loadPantryAPI = function () {
   })
   .fail(function (data) {
     console.log("Error, this failed.");
+    $('.flash').show();
     $('.flash').text("Uh oh, this failed. Please try again.");
   });
   
@@ -242,13 +244,6 @@ $(document).ready(function () {
     displayPantry();
   });
 
-  // FORMHOLDER DIV
-
-  // $('.formHolder').on('click', '.submit', function () {
-  //   event.preventDefault();
-  //   console.log('form is done.');
-  //   console.log($('form.addForm').serialize());
-  // });
 
 
 });
