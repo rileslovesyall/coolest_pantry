@@ -60,6 +60,14 @@ var flashMessage = function (message) {
   $('.flash').text(message);
 };
 
+// 
+// SPLASH PAGE
+// 
+
+var displaySplash = function () {
+  $('.splash').show();
+};
+
 //
 //  FORM METHODS
 //
