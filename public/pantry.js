@@ -114,7 +114,6 @@ var loadPantryAPI = function () {
 // 
 
 var viewItem = function (id) {
-
   // ajax call to get latest data
   $.ajax({
     type: "GET",
@@ -131,14 +130,17 @@ var viewItem = function (id) {
         "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
         "<button class='add btn btn-default' id="+id+"> Quick Add </button>" +
         "<button class='show-pantry btn btn-default'> Back to Pantry </button>" +
-        "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>";
+        "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>" +
+        "<div class='row'>" +
+          "<div class='col-sm-6'><button class='edit btn btn-default' id="+id+">Edit This Item</button></div>" +
+          "<div class='col-sm-6'><button class='bulk-add btn btn-default' id="+id+">Bulk Add</button></div>" +
+        "</div>";
       $('.pantryitem').html(pantryitemHtml);
     }
   })
   .fail(function(data) {
     console.log("Uh oh, this failed.");
   });
-
   // hide pantry div, display pantryitem div, set loading message / new header
   $('.pantry').hide();
   $('.pantryitem').show();
@@ -158,11 +160,15 @@ var viewItem = function (id) {
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
     "<button class='add btn btn-default' id="+id+"> Quick Add </button>" +
     "<button class='show-pantry btn btn-default'> Back to Pantry </button>" +
-    "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>";
+    "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>" +
+    "<div class='row'>" +
+      "<div class='col-sm-6'><button class='edit btn btn-default' id="+id+">Edit This Item</button></div>" +
+      "<div class='col-sm-6'><button class='bulk-add btn btn-default' id="+id+">Bulk Add</button></div>" +
+    "</div>";
   $('.pantryitem').html(tempHtml);
-
-
 };
+
+
 
 var addConsumeItem = function(id, action, quantity) {
   // make AJAX call to check data against API
