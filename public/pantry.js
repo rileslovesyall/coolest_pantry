@@ -37,6 +37,9 @@ var setFooter = function () {
 // HELPER METHODS
 // 
 
+// var baseURL = "http://localhost:9393";
+var baseURL = "http://pantryapi-env.us-west-2.elasticbeanstalk.com";
+
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
   var day = date.getDate();
@@ -127,7 +130,7 @@ var submitItem = function (type, id) {
   if (type === 'add') {
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:9393/api/v1/pantryitems',
+      url: baseURL + '/api/v1/pantryitems',
       headers: {'Authorization': token},
       data: $('.add-form').serialize(),
       success: function(data) {
@@ -142,7 +145,7 @@ var submitItem = function (type, id) {
   } else if (type === 'edit') {
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:9393/api/v1/pantryitems/'+ id,
+      url: baseURL + '/api/v1/pantryitems/'+ id,
       headers: {'Authorization': token},
       data: $('.edit-form').serialize(),
       success: function(data) {
@@ -175,7 +178,7 @@ var displayLoginForm = function () {
 
 var submitLogin = function () {
   event.preventDefault();
-  $.post('http://localhost:9393/api/v1/token',
+  $.post(baseURL + '/api/v1/token',
     $('.login-form').serialize())
   .done(function (data) {
     console.log(data);
@@ -217,7 +220,7 @@ var displaySignupForm = function () {
 
 var submitSignup = function () {
   event.preventDefault();
-  $.post('http://localhost:9393/api/v1/users',
+  $.post(baseURL + '/api/v1/users',
     $('.signup-form').serialize())
   .done(function (data) {
     console.log(data);
@@ -282,7 +285,7 @@ var loadPantryAPI = function () {
   $.ajax({
     type:"GET",
     headers: {'Authorization': token},
-    url: "http://localhost:9393/api/v1/users/" + uid + "/personal_pantry",
+    url: baseURL + "/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
       var length = data['pantry_items'].length;
       var pantryHtml = "";
@@ -329,7 +332,7 @@ var viewItem = function (id) {
   // ajax call to get latest data
   $.ajax({
     type: "GET",
-    url: "http://localhost:9393/api/v1/pantryitems/" + id,
+    url: baseURL + "/api/v1/pantryitems/" + id,
     headers: {'Authorization': localStorage.token},
     success: function (data) {
       var item = data['pantryitem'];
@@ -386,7 +389,7 @@ var addConsumeItem = function(id, action, quantity) {
   // make AJAX call to check data against API
   $.ajax({
     type: "POST",
-    url: "http://localhost:9393/api/v1/pantryitems/" + id + "/" + action ,
+    url: baseURL + "/api/v1/pantryitems/" + id + "/" + action ,
     headers: {'Authorization': localStorage.token},
     data: 'quantity=' + quantity,
     success: function (data) {
