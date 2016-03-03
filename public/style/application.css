@@ -67,6 +67,10 @@ th {
   font-size: 24pt;
 }
 
+.pantry {
+  margin: 0 auto;
+}
+
 .pantryitem {
   margin-top: 5px;
   margin-bottom: 5px;

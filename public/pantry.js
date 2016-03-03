@@ -249,7 +249,11 @@ var loadPantryAPI = function () {
           "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
           "</tr>";
       }
-      pantryHtml += "</table>";
+      if (length === 0) {
+        pantryHtml = "<h3>You don't have any items yet. Add some to get started.</h3>";
+      } else {
+        pantryHtml += "</table>";
+      }
       $('.pantry').html(pantryHtml);
 
       // reset localStorage to most up-to-date data
