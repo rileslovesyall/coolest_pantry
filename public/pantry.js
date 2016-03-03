@@ -52,20 +52,36 @@ var storeEachToLocalStorage = function (pantryitemArr) {
   }
 };
 
+var flashMessage = function (message) {
+  $('.flash').show();
+  $('.flash').text(message);
+};
+
 //
 //  FORM METHODS
 //
 
 var displayItemForm = function (id) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
-  var name, description, portion, quantity, expDate, ingredients;
+  var name, description, portion, quantity, expDate, ingredients, submitClass, formClass, headerText;
   if (item !== null) {
     name = item['name'];
-    description = item['description'];
+    if (item['description' === undefined]) {
+      description = '';
+    } else {
+      description = item['description'];
+    }
     portion = item['portion'];
     quantity = item['quantity'];
     expDate = item['expiration-date'];
-    ingredients = item['ingredients'];
+    if (item['ingredients'] === undefined) {
+      ingredients = '';
+    } else {
+      ingredients = item['ingredients'];
+    }
+    submitClass = 'edit-item';
+    formClass = 'edit-form';
+    headerText = 'Edit Item';
   } else {
     name = '';
     description = '';
@@ -73,9 +89,12 @@ var displayItemForm = function (id) {
     quantity = '';
     expDate = '';
     ingredients = '';
+    submitClass = 'add-item';
+    formClass = 'add-form';
+    headerText = 'Add Item';
   }
   var formHtml =
-    "<form class='add-form'>" +
+    "<form class='"+formClass+"'>" +
       "<fieldset class='form-group'>" +
         "<label for='name'>Name: </label>" +
         "<input class='form-control' for='name' id='name' type='text' name='name' required value='"+name+"'>" +
@@ -83,48 +102,58 @@ var displayItemForm = function (id) {
         "<input class='form-control for='description' id='description' name='description' value='"+description+"''>" +
         "<label for='portion'>Portion Size: </label>" +
         "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
-        "<input class='form-control' name = 'portion' for='portion' id='portion' required value='"+value+"'>" +
-        "<label for='quantity'>Quantity: </label> " +
-        "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required value='"+quantity+"'>" +
+        "<input class='form-control' name = 'portion' for='portion' id='portion' required value='"+portion+"'>";
+        if (formClass === 'add-form') {
+          formHtml += "<label for='quantity'>Quantity: </label> " +
+        "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>";
+        }
+        formHtml +=
         "<label for='exp-date'>Expiration Date</label>" +
         "<input class='form-control' for='exp-date' id='exp-date' type='date' name='expiration-date' required value='"+expDate+"'>" +
         "<label for='ingredients'>Ingredients: </label>" +
         "<div class='form-note'>(please separate with a comma)</div>" +
         "<input class='form-control' for='ingredients' id='ingredients' name='ingredients' value='"+ingredients+"'>" +
       "</fieldset>" +
-      "<button class='submit-add-item btn btn-default'>Submit</button>" +
+      "<button class='"+submitClass+" btn btn-default' id='"+id+"'>Submit</button>" +
     "</form>";
   $('.form-holder').show();
   $('.form-holder').html(formHtml);
-  $('#header').text('Add an Item');
+  $('#header').text(headerText);
 };
 
-var submitItem = function (type) {
+var submitItem = function (type, id) {
   var token = localStorage.getItem('token');
   event.preventDefault();
   if (type === 'add') {
-    console.log($('.add-form').serialize());
     $.ajax({
       type: 'POST',
       url: 'http://localhost:9393/api/v1/pantryitems',
       headers: {'Authorization': token},
       data: $('.add-form').serialize(),
-      // dataType: "json",
       success: function(data) {
-        console.log(data);
-        console.log('succeeded!');
+        $('.form-holder').hide();
+        displayPantry();
         }
       })
-    .done(function (data) {
-      $('.form-holder').hide();
-      displayPantry();
-    })
     .fail (function(data) {
-      console.log("Failed");
       console.log(data);
+      flashMessage('Uh oh, this failed. Please try again.');
     });
   } else if (type === 'edit') {
-    console.log('update form');
+    $.ajax({
+      type: 'POST',
+      url: 'http://localhost:9393/api/v1/pantryitems/'+ id,
+      headers: {'Authorization': token},
+      data: $('.edit-form').serialize(),
+      success: function(data) {
+        $('.form-holder').hide();
+        displayPantry();
+        }
+      })
+    .fail (function(data) {
+      console.log("data");
+      flashMessage('Uh oh, this failed. Please try again.');
+    });
   }
 };
 
@@ -315,7 +344,7 @@ var viewItem = function (id) {
         "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
         "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
         "<div class='row'>" +
-          "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit Item</button></div>" +
+          "<div class='col-sm-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
           "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
         "</div>";
       $('.pantryitem').html(pantryitemHtml);
@@ -345,7 +374,7 @@ var viewItem = function (id) {
     "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
     "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
     "<div class='row'>" +
-      "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit Item</button></div>" +
+      "<div class='col-sm-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
       "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
   $('.pantryitem').html(tempHtml);
@@ -467,8 +496,12 @@ $(document).ready(function () {
     submitSignup();
   });
 
-  $('.form-holder').on('click', '.submit-add-item', function () {
+  $('.form-holder').on('click', '.add-item', function () {
     submitItem('add');
+  });
+  $('.form-holder').on('click', '.edit-item', function () {
+    var id = $(this).attr('id');
+    submitItem('edit', id);
   });
 
   // PANTRY DIV
@@ -498,6 +531,17 @@ $(document).ready(function () {
   $('.pantryitem').on('click', '.show-pantry', function () {
     $('.pantryitem').hide();
     displayPantry();
+  });
+
+  $('.pantryitem').on('click', '.bulk-add', function () {
+    $('.pantryitem').hide();
+    displayPantry();
+  });
+
+  $('.pantryitem').on('click', '.edit-btn', function () {
+    var id = $(this).attr('id');
+    $('.pantryitem').hide();
+    displayItemForm(id);
   });
 
 
