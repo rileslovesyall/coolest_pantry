@@ -91,7 +91,7 @@ var displayAddItemForm = function (id) {
       "</fieldset>" +
       "<button class='submit-add-item btn btn-default'>Submit</button>" +
     "</form>";
-  $('.item-form').html(formHtml);
+  $('.form-holder').html(formHtml);
   $('#header').text('Add an Item');
 };
 
@@ -112,7 +112,7 @@ var submitItem = function (type) {
         }
       })
     .done(function (data) {
-      $('.item-form').hide();
+      $('.form-holder').hide();
       displayPantry();
     })
     .fail (function(data) {
@@ -126,30 +126,31 @@ var submitItem = function (type) {
 
 var displayLoginForm = function () {
   var formHtml =
-  "<form>" +
+  "<form class='login-form'>" +
     "<fieldset class='form-group'>" +
       "<label for='email'>Email: </label>" +
       "<input class='form-control' for='email' id='email' name='email' type='email'>" +
       "<label for='password'>Password: </label>" +
       "<input class='form-control' for='password' id='password' name='password' type='password'>" +
     "</fieldset>" +
-    "<button class='btn btn-default login'>Submit</button>" +
+    "<button class='btn btn-default login-button'>Submit</button>" +
   "</form>";
-  $('.form').html(formHtml);
+  $('.form-holder').show();
+  $('.form-holder').html(formHtml);
   $('#header').text('Login');
 };
 
 var submitLogin = function () {
   event.preventDefault();
   $.post('http://localhost:9393/api/v1/token',
-    $('form').serialize())
+    $('.login-form').serialize())
   .done(function (data) {
     console.log(data);
     if (data['error'] === undefined) {
       localStorage.token = data['token'];
       localStorage.uid = data['uid'];
       localStorage.name = data['name'];
-      document.location.href = '../lib/pantry.html';
+      displayPantry();
     } else {
       console.log(data['error']);
     }
@@ -259,7 +260,7 @@ var viewItem = function (id) {
         "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
         "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
         "<div class='row'>" +
-          "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit This Item</button></div>" +
+          "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit Item</button></div>" +
           "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
         "</div>";
       $('.pantryitem').html(pantryitemHtml);
@@ -289,7 +290,7 @@ var viewItem = function (id) {
     "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
     "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
     "<div class='row'>" +
-      "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit This Item</button></div>" +
+      "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit Item</button></div>" +
       "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
   $('.pantryitem').html(tempHtml);
@@ -336,8 +337,20 @@ var addConsumeItem = function(id, action, quantity) {
   $('#'+id+'.quantity-show').text("Available Quantity: " + currItem['quantity']);
 };
 
+// 
+// 
+// 
+//  DOCUMENT READY CODE BELOW
+// 
+// 
+// 
 
 $(document).ready(function () {
+
+  // hide flash div on click if it's been displayed
+  $(document).click(function () {
+    $('.flash').hide();
+  });
 
   // setup HTML
   setHead();
@@ -345,20 +358,20 @@ $(document).ready(function () {
   setFooter();
   $('.flash').hide();
 
+  // load login
+  // CHANGE THIS TO BE SPLASH PAGE
+  if (localStorage.token) {
+    displayPantry();
+  } else {
+    displayLoginForm();
+  }
 
-  // hide flash div on click if it's been displayed
-  $(document).click(function () {
-    $('.flash').hide();
-  });
 
-  // load User Pantry
-  displayPantry();
+  // NAVBAR DIV
 
-  // NAVBAR CLICKS
   $('.navbar').on('click', '.login', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
-    $('.form').show();
     displayLoginForm();
   });
 
@@ -375,21 +388,25 @@ $(document).ready(function () {
   });
 
   $('.navbar').on('click', '.pantry-link', function () {
-    document.location.href = '../lib/pantry.html';
+    $('.form-holder').hide();
+    $('.pantryitem').hide();
+    displayPantry();
   });
-  
+
   $('.navbar').on('click', '.add-item', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
-    $('.item-form').show();
+    $('.form-holder').show();
     displayAddItemForm();
   });
 
-  $('.login-form').on('click', '.login', function () {
+  // FORM DIV
+
+  $('.form-holder').on('click', '.login-button', function () {
     submitLogin();
   });
 
-  $('.item-form').on('click', '.submit-add-item', function () {
+  $('.form-holder').on('click', '.submit-add-item', function () {
     submitItem('add');
   });
 
