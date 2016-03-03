@@ -45,22 +45,6 @@ var cleanDate = function(dateString) {
   return month + '/' + day + '/' + year;
 };
 
-// var findItemFromLocalStorage = function(id) {
-//   var items = JSON.parse(localStorage.getItem('pantryitems'));
-//   var found = false;
-//   var item;
-//   while (!found) {
-//     for (i = 0; i < items.length; i++) {
-//       if (items[i]['id'] === Number(id)) {
-//         found = true;
-//         console.log(items[i]);
-//         item = items[i];
-//       }
-//     }
-//   }
-//   return item;
-// };
-
 var storeEachToLocalStorage = function (pantryitemArr) {
   for (var i = 0; i < pantryitemArr.length; i++) {
     var item = pantryitemArr[i];
@@ -91,6 +75,7 @@ var displayAddItemForm = function (id) {
       "</fieldset>" +
       "<button class='submit-add-item btn btn-default'>Submit</button>" +
     "</form>";
+  $('.form-holder').show();
   $('.form-holder').html(formHtml);
   $('#header').text('Add an Item');
 };
@@ -150,6 +135,8 @@ var submitLogin = function () {
       localStorage.token = data['token'];
       localStorage.uid = data['uid'];
       localStorage.name = data['name'];
+      setNavbar();
+      $('.form-holder').hide();
       displayPantry();
     } else {
       console.log(data['error']);
@@ -158,6 +145,47 @@ var submitLogin = function () {
   .fail(function (data){
     console.log(data);
     console.log('This failed. I should probably do something different here.');
+  });
+};
+
+var displaySignupForm = function () {
+  var formHtml = "<form class='signup-form'>" +
+    "<fieldset class='form-group'>" +
+      "<label for='name'>Name: </label>" +
+      "<input class='form-control' for='name' id='name' name='name' type='text'>" +
+      "<label for='email'>Email: </label>" +
+      "<input class='form-control' for='email' id='email' name='email' type='email'>" +
+      "<label for='password'>Password: </label>" +
+      "<input class='form-control' for='password' id='password' name='password' type='password'>" +
+      "<label for='password_confirmation'>Password Confirmation: </label>" +
+      "<input class='form-control' for='password_confirmation' id='password_confirmation' name='password' type='password'>" +
+    "</fieldset>" +
+    "<button class='btn btn-default signup-button'>Sign Up</button>" +
+  "</form>";
+  $('.form-holder').show();
+  $('.form-holder').html(formHtml);
+  $('#header').text('Sign Up');
+};
+
+var submitSignup = function () {
+  event.preventDefault();
+  $.post('http://localhost:9393/api/v1/users',
+    $('.signup-form').serialize())
+  .done(function (data) {
+    console.log(data);
+    if (data['error'] === undefined) {
+      localStorage.token = data['user']['api_token'];
+      localStorage.uid = data['user']['id'];
+      localStorage.name = data['user']['name'];
+      $('.form-holder').hide();
+      setNavbar();
+      displayPantry();
+    } else {
+      console.log(data['error']);
+    }
+  })
+  .fail(function (data){
+    console.log('failed');
   });
 };
 
@@ -376,14 +404,17 @@ $(document).ready(function () {
   });
 
   $('.navbar').on('click', '.signup', function () {
-    document.location.href = '../lib/signup.html';
+    $('.pantry').hide();
+    $('.pantryitem').hide();
+    displaySignupForm();
   });
 
   $('.navbar').on('click', '.logout', function () {
     localStorage.clear();
     $('.pantry').hide();
     $('.pantryitem').hide();
-    $('.form').hide();
+    $('.form-holder').hide();
+    setNavbar();
     $('#header').text('Please come again.');
   });
 
@@ -396,7 +427,6 @@ $(document).ready(function () {
   $('.navbar').on('click', '.add-item', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
-    $('.form-holder').show();
     displayAddItemForm();
   });
 
@@ -404,6 +434,10 @@ $(document).ready(function () {
 
   $('.form-holder').on('click', '.login-button', function () {
     submitLogin();
+  });
+
+  $('.form-holder').on('click', '.signup-button', function () {
+    submitSignup();
   });
 
   $('.form-holder').on('click', '.submit-add-item', function () {
