@@ -37,8 +37,8 @@ var setFooter = function () {
 // HELPER METHODS
 // 
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "http://pantryapi-env.us-west-2.elasticbeanstalk.com";
+var baseURL = "http://localhost:9393";
+// var baseURL = "http://pantryapi-env.us-west-2.elasticbeanstalk.com";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -270,12 +270,17 @@ var loadPantryLocalStorage = function () {
   "<th>Quantity</th><th>Consume</th><th>Exp. Date</th>";
   for (i=0; i<items.length;i++) {
     var item = items[i];
-    var expDate = cleanDate(item['expiration_date']);
+    var expDate;
+    if (item['expiration_date'] === null) {
+      expDate = N/A;
+    } else {
+      expDate = cleanDate(item['expiration_date']);
+    }
       tempHtml += "<tr>" +
           "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
           "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
           "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
+          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
           "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
           "</tr>";
   }
@@ -304,12 +309,17 @@ var loadPantryAPI = function () {
       for (i = 0; i < length; i++) {
         var item  = data['pantry_items'][i];
         itemsArr.push(item);
-        var expDate = cleanDate(item['expiration_date']);
+        var expDate;
+        if (item['expiration_date'] === null) {
+          expDate = N/A;
+        } else {
+          expDate = cleanDate(item['expiration_date']);
+        }
         pantryHtml += "<tr>" +
           "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
           "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
           "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> -1 </button" + "</td>" +
+          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
           "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
           "</tr>";
       }
@@ -349,8 +359,14 @@ var viewItem = function (id) {
       if (item['description'] !== null) {
         description += "<div class='pantryitem-show description-show'>" + item['description'] + "</div>";
       }
+      var expDate;
+      if (item['expiration_date'] === null) {
+        expDate = N/A;
+      } else {
+        expDate = cleanDate(item['expiration_date']);
+      }
       var pantryitemHtml = description +
-        "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
+        "<div class='pantryitem-show exp-date-show'> Expiration Date: " + exp + "</div>" +
         "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
         "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
         "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
@@ -379,8 +395,14 @@ var viewItem = function (id) {
   if (currItem['description'] !== null) {
     description += "<div class='pantryitem-show description-show'>" + currItem['description'] + "</div>";
   }
+  var exp;
+  if (currItem['expiration_date'] === null) {
+    exp = N/A;
+  } else {
+    exp = cleanDate(currItem['expiration_date']);
+  }
   var tempHtml = description +
-    "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(currItem['expiration_date']) + "</div>" +
+    "<div class='pantryitem-show exp-date-show'> Expiration Date: " + exp + "</div>" +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
     "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
     "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
@@ -405,6 +427,14 @@ var addConsumeItem = function(id, action, quantity) {
       if (data['error'] === undefined) {
         $('#'+id+'.quantity').text(data['pantryitem']['quantity']);
         $('#'+id+'.quantity-show').text("Available Quantity: "+ data['pantryitem']['quantity']);
+        // update localStorage
+        var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
+        if (action === 'add') {
+          currItem['quantity'] += 1;
+        } else if (action === 'consume') {
+          currItem['quantity'] -= 1;
+        }
+        localStorage.setItem('pantryitem' + id, JSON.stringify(currItem));
       } else {
         $('.flash').show();
         $('.flash').text(error['message']);
@@ -416,21 +446,6 @@ var addConsumeItem = function(id, action, quantity) {
     $('.flash').show();
     $('.flash').text("Uh oh, this failed. Please try again.");
   });
-
-  // update from localStorage for quicker display
-  var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
-
-  if (action === 'add') {
-    currItem['quantity'] += 1;
-
-  } else if (action === 'consume') {
-    currItem['quantity'] -= 1;
-  }
-
-  localStorage.setItem('pantryitem' + id, JSON.stringify(currItem));
-
-  $('#'+id+'.quantity').text(currItem['quantity']);
-  $('#'+id+'.quantity-show').text("Available Quantity: " + currItem['quantity']);
 };
 
 // 
