@@ -128,12 +128,12 @@ var viewItem = function (id) {
       var pantryitemHtml = description +
         "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(item['expiration_date']) + "</div>" +
         "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
-        "<button class='add btn btn-default' id="+id+"> Quick Add </button>" +
-        "<button class='show-pantry btn btn-default'> Back to Pantry </button>" +
-        "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>" +
+        "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
+        "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
+        "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
         "<div class='row'>" +
-          "<div class='col-sm-6'><button class='edit btn btn-default' id="+id+">Edit This Item</button></div>" +
-          "<div class='col-sm-6'><button class='bulk-add btn btn-default' id="+id+">Bulk Add</button></div>" +
+          "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit This Item</button></div>" +
+          "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
         "</div>";
       $('.pantryitem').html(pantryitemHtml);
     }
@@ -158,12 +158,12 @@ var viewItem = function (id) {
   var tempHtml = description +
     "<div class='pantryitem-show exp-date-show'> Expiration Date: " + cleanDate(currItem['expiration_date']) + "</div>" +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
-    "<button class='add btn btn-default' id="+id+"> Quick Add </button>" +
-    "<button class='show-pantry btn btn-default'> Back to Pantry </button>" +
-    "<button class='consume consume-show btn btn-default' id="+id+"> Consume </button>" +
+    "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
+    "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
+    "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
     "<div class='row'>" +
-      "<div class='col-sm-6'><button class='edit btn btn-default' id="+id+">Edit This Item</button></div>" +
-      "<div class='col-sm-6'><button class='bulk-add btn btn-default' id="+id+">Bulk Add</button></div>" +
+      "<div class='col-sm-6'><button class='edit btn btn-default big-button' id="+id+">Edit This Item</button></div>" +
+      "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
   $('.pantryitem').html(tempHtml);
 };
