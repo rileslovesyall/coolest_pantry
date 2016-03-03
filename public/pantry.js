@@ -56,22 +56,41 @@ var storeEachToLocalStorage = function (pantryitemArr) {
 //  FORM METHODS
 //
 
-var displayAddItemForm = function (id) {
+var displayItemForm = function (id) {
+  var item = JSON.parse(localStorage.getItem('pantryitem' + id));
+  var name, description, portion, quantity, expDate, ingredients;
+  if (item !== null) {
+    name = item['name'];
+    description = item['description'];
+    portion = item['portion'];
+    quantity = item['quantity'];
+    expDate = item['expiration-date'];
+    ingredients = item['ingredients'];
+  } else {
+    name = '';
+    description = '';
+    portion = '';
+    quantity = '';
+    expDate = '';
+    ingredients = '';
+  }
   var formHtml =
     "<form class='add-form'>" +
       "<fieldset class='form-group'>" +
         "<label for='name'>Name: </label>" +
-        "<input class='form-control' for='name' id='name' type='text' name='name' required>" +
+        "<input class='form-control' for='name' id='name' type='text' name='name' required value='"+name+"'>" +
         "<label for='description'>Description </label>" +
-        "<input class='form-control for='description' id='description' name='description'>" +
+        "<input class='form-control for='description' id='description' name='description' value='"+description+"''>" +
         "<label for='portion'>Portion Size: </label>" +
         "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
-        "<input class='form-control' name = 'portion' for='portion' id='portion' required>" +
+        "<input class='form-control' name = 'portion' for='portion' id='portion' required value='"+value+"'>" +
         "<label for='quantity'>Quantity: </label> " +
-        "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required>" +
+        "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required value='"+quantity+"'>" +
+        "<label for='exp-date'>Expiration Date</label>" +
+        "<input class='form-control' for='exp-date' id='exp-date' type='date' name='expiration-date' required value='"+expDate+"'>" +
         "<label for='ingredients'>Ingredients: </label>" +
         "<div class='form-note'>(please separate with a comma)</div>" +
-        "<input class='form-control' for='ingredients' id='ingredients' name='ingredients'>" +
+        "<input class='form-control' for='ingredients' id='ingredients' name='ingredients' value='"+ingredients+"'>" +
       "</fieldset>" +
       "<button class='submit-add-item btn btn-default'>Submit</button>" +
     "</form>";
@@ -435,7 +454,7 @@ $(document).ready(function () {
   $('.navbar').on('click', '.add-item', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
-    displayAddItemForm();
+    displayItemForm();
   });
 
   // FORM DIV
