@@ -272,7 +272,7 @@ var loadPantryLocalStorage = function () {
     var item = items[i];
     var expDate;
     if (item['expiration_date'] === null) {
-      expDate = N/A;
+      expDate = 'N/A';
     } else {
       expDate = cleanDate(item['expiration_date']);
     }
@@ -311,7 +311,7 @@ var loadPantryAPI = function () {
         itemsArr.push(item);
         var expDate;
         if (item['expiration_date'] === null) {
-          expDate = N/A;
+          expDate = 'N/A';
         } else {
           expDate = cleanDate(item['expiration_date']);
         }
@@ -361,7 +361,7 @@ var viewItem = function (id) {
       }
       var expDate;
       if (item['expiration_date'] === null) {
-        expDate = N/A;
+        expDate = 'N/A';
       } else {
         expDate = cleanDate(item['expiration_date']);
       }
@@ -397,7 +397,7 @@ var viewItem = function (id) {
   }
   var exp;
   if (currItem['expiration_date'] === null) {
-    exp = N/A;
+    exp = 'N/A';
   } else {
     exp = cleanDate(currItem['expiration_date']);
   }
