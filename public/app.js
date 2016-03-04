@@ -37,8 +37,8 @@ var setFooter = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "https://localhost:3000";
-var baseURL = "https://pantryapi-env.us-west-2.elasticbeanstalk.com";
+var baseURL = "http://localhost:9393";
+// var baseURL = "https://pantryapi-env.us-west-2.elasticbeanstalk.com";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
