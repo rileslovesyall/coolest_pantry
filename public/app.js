@@ -355,6 +355,17 @@ var viewItem = function (id) {
     headers: {'Authorization': localStorage.token},
     success: function (data) {
       var item = data['pantryitem'];
+      var ings = data['ingredients'];
+
+      var ingHtml = "<div class='ingredients-show'>";
+      if (ings.length > 0) {
+        for (var i = 0; i < ings.length -1; i++) {
+          ingHtml += ings[i]['name'] + ", ";
+        }
+        ingHtml += ings[ings.length-1]['name'];
+      }
+      ingHtml += " </div>";
+
       var description = "";
       if (item['description'] !== null) {
         description += "<div class='pantryitem-show description-show'>" + item['description'] + "</div>";
@@ -366,14 +377,15 @@ var viewItem = function (id) {
         expDate = cleanDate(item['expiration_date']);
       }
       var pantryitemHtml = description +
-        "<div class='pantryitem-show exp-date-show'> Expiration Date: " + exp + "</div>" +
+        "<div class='pantryitem-show exp-date-show'> Expiration Date: " + expDate + "</div>" +
         "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
+        ingHtml +
         "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
         "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
         "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
         "<div class='row'>" +
-          "<div class='col-sm-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
-          "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
+          "<div class='col-xs-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
+          "<div class='col-xs-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
         "</div>";
       $('.pantryitem').html(pantryitemHtml);
     }
@@ -391,27 +403,27 @@ var viewItem = function (id) {
   $('#header').text(currItem['name']);
 
   // pull info from localStorage
-  var description = "";
-  if (currItem['description'] !== null) {
-    description += "<div class='pantryitem-show description-show'>" + currItem['description'] + "</div>";
-  }
-  var exp;
-  if (currItem['expiration_date'] === null) {
-    exp = 'N/A';
-  } else {
-    exp = cleanDate(currItem['expiration_date']);
-  }
-  var tempHtml = description +
-    "<div class='pantryitem-show exp-date-show'> Expiration Date: " + exp + "</div>" +
-    "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
-    "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
-    "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
-    "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
-    "<div class='row'>" +
-      "<div class='col-sm-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
-      "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
-    "</div>";
-  $('.pantryitem').html(tempHtml);
+  // var description = "";
+  // if (currItem['description'] !== null) {
+  //   description += "<div class='pantryitem-show description-show'>" + currItem['description'] + "</div>";
+  // }
+  // var exp;
+  // if (currItem['expiration_date'] === null) {
+  //   exp = 'N/A';
+  // } else {
+  //   exp = cleanDate(currItem['expiration_date']);
+  // }
+  // var tempHtml = description +
+  //   "<div class='pantryitem-show exp-date-show'> Expiration Date: " + exp + "</div>" +
+  //   "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
+  //   "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
+  //   "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
+  //   "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
+  //   "<div class='row'>" +
+  //     "<div class='col-sm-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
+  //     "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
+  //   "</div>";
+  // $('.pantryitem').html(tempHtml);
 };
 
 
@@ -590,7 +602,6 @@ $(document).ready(function () {
     $('.pantryitem').hide();
     displayItemForm(id);
   });
-
 
 
 });
