@@ -37,8 +37,8 @@ var setFooter = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "http://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "http://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -140,6 +140,7 @@ var displayItemForm = function (id) {
 };
 
 var myPost = function(path, form) {
+  var token = localStorage.token;
   $.ajax({
     type: 'POST',
     url: baseURL + path,
@@ -155,6 +156,7 @@ var myPost = function(path, form) {
     flashMessage('Uh oh, this failed. Please try again.');
   });
 };
+
 var submitItem = function (type, id) {
   var token = localStorage.getItem('token');
   event.preventDefault();
