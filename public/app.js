@@ -2,15 +2,6 @@
 // HTML SETUP METHODS
 //
 
-var setHead = function() {
-  $('head').append(
-      "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' integrity='sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7' crossorigin='anonymous'>"+
-      "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js' integrity='sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS' crossorigin='anonymous'></script>"+
-      "<link href='https://fonts.googleapis.com/css?family=Special+Elite|Nixie+One' rel='stylesheet' type='text/css'>"+
-      "<link rel='stylesheet' href='./public/app.css'>"
-    );
-};
-
 var setNavbar = function () {
   var navbarHtml = "";
 
@@ -28,17 +19,12 @@ var setNavbar = function () {
   $('.navbar').html(navbarHtml);
 };
 
-var setFooter = function () {
-  var footerHtml = "<p>&copy; Riley Spicer 2016 -- <a href='http://rileyspicer.com' >rileyspicer.com</a> -- Ada Developer's Academy Capstone Project</p>";
-  $('.footer').html(footerHtml);
-};
-
 //
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "http://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "http://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -474,11 +460,10 @@ $(document).ready(function () {
   });
 
   // setup HTML
-  setHead();
-  setNavbar();
-  setFooter();
   $('.flash').hide();
   $('.splash').hide();
+
+  setNavbar();
 
   // load login
   // CHANGE THIS TO BE SPLASH PAGE
