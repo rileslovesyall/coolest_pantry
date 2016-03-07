@@ -65,6 +65,7 @@ var clean = function(str) {
 var dirty = function(str) {
   return str.replace('&#39;', '\'');
 };
+
 var displayItemForm = function (id) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
   var name, description, portion, quantity, expDate, ingredients, submitClass, formClass, headerText;
@@ -112,8 +113,6 @@ var displayItemForm = function (id) {
         "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>";
         }
         formHtml +=
-        "<label for='exp-date'>Expiration Date</label>" +
-        "<input class='form-control' for='exp-date' id='exp-date' type='date' name='expiration-date' required value='"+expDate+"'>" +
         "<label for='ingredients'>Ingredients: </label>" +
         "<div class='form-note'>(please separate with a comma)</div>" +
         "<input class='form-control' for='ingredients' id='ingredients' name='ingredients' value='"+ingredients+"'>" +
@@ -125,7 +124,7 @@ var displayItemForm = function (id) {
   $('#header').text(headerText);
 };
 
-var myPost = function(path, form) {
+var postForm = function(path, form) {
   var token = localStorage.token;
   $.ajax({
     type: 'POST',
@@ -147,9 +146,9 @@ var submitItem = function (type, id) {
   var token = localStorage.getItem('token');
   event.preventDefault();
   if (type === 'add') {
-    myPost('/api/v1/pantryitems', '.add-form');
+    postForm('/api/v1/pantryitems', '.add-form');
   } else if (type === 'edit') {
-    myPost('/api/v1/pantryitems/'+ id, '.edit-form');
+    postForm('/api/v1/pantryitems/'+ id, '.edit-form');
   }
 };
 
@@ -251,7 +250,7 @@ var loadPantryLocalStorage = function () {
   var items = JSON.parse(localStorage.getItem('pantryitems'));
   var tempHtml = "";
   tempHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
-  "<th>Quantity</th><th>Consume</th><th>Exp. Date</th>";
+  "<th>Quantity</th><th>Consume</th>";
   for (i=0; i<items.length;i++) {
     var item = items[i];
     var expDate;
@@ -265,7 +264,6 @@ var loadPantryLocalStorage = function () {
           "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
           "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
           "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
-          "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
           "</tr>";
   }
   if (items.length === 0) {
@@ -289,22 +287,15 @@ var loadPantryAPI = function () {
       var pantryHtml = "";
       var itemsArr = [];
       pantryHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
-      "<th>Quantity</th><th>Consume</th><th>Exp. Date</th>";
+      "<th>Quantity</th><th>Consume</th>";
       for (i = 0; i < length; i++) {
         var item  = data['pantry_items'][i];
         itemsArr.push(item);
-        var expDate;
-        if (item['expiration_date'] === null) {
-          expDate = 'N/A';
-        } else {
-          expDate = cleanDate(item['expiration_date']);
-        }
         pantryHtml += "<tr>" +
           "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
           "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
           "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
           "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
-          "<td class='exp-date td-not-button' id="+item['id']+">" + expDate + "</td>" +
           "</tr>";
       }
       if (length === 0) {
