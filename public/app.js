@@ -37,8 +37,8 @@ var setFooter = function () {
 // HELPER METHODS
 //
 
-var baseURL = "http://localhost:9393";
-// var baseURL = "https://pantryapi-env.us-west-2.elasticbeanstalk.com";
+// var baseURL = "http://localhost:9393";
+var baseURL = "http://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -73,11 +73,17 @@ var displaySplash = function () {
 //  FORM METHODS
 //
 
+var clean = function(str) {
+  return str.replace('\'', '&#39;');
+};
+var dirty = function(str) {
+  return str.replace('&#39;', '\'');
+};
 var displayItemForm = function (id) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
   var name, description, portion, quantity, expDate, ingredients, submitClass, formClass, headerText;
   if (item !== null) {
-    name = item['name'];
+    name = clean(item['name']);
     if (item['description' === undefined]) {
       description = '';
     } else {
@@ -133,39 +139,29 @@ var displayItemForm = function (id) {
   $('#header').text(headerText);
 };
 
+var myPost = function(path, form) {
+  $.ajax({
+    type: 'POST',
+    url: baseURL + path,
+    headers: {'Authorization': token},
+    data: $(form).serialize(),
+    success: function(data) {
+      $('.form-holder').hide();
+      displayPantry();
+      }
+    })
+  .fail (function(data) {
+    console.log(data);
+    flashMessage('Uh oh, this failed. Please try again.');
+  });
+};
 var submitItem = function (type, id) {
   var token = localStorage.getItem('token');
   event.preventDefault();
   if (type === 'add') {
-    $.ajax({
-      type: 'POST',
-      url: baseURL + '/api/v1/pantryitems',
-      headers: {'Authorization': token},
-      data: $('.add-form').serialize(),
-      success: function(data) {
-        $('.form-holder').hide();
-        displayPantry();
-        }
-      })
-    .fail (function(data) {
-      console.log(data);
-      flashMessage('Uh oh, this failed. Please try again.');
-    });
+    myPost('/api/v1/pantryitems', '.add-form');
   } else if (type === 'edit') {
-    $.ajax({
-      type: 'POST',
-      url: baseURL + '/api/v1/pantryitems/'+ id,
-      headers: {'Authorization': token},
-      data: $('.edit-form').serialize(),
-      success: function(data) {
-        $('.form-holder').hide();
-        displayPantry();
-        }
-      })
-    .fail (function(data) {
-      console.log("data");
-      flashMessage('Uh oh, this failed. Please try again.');
-    });
+    myPost('/api/v1/pantryitems/'+ id, '.edit-form');
   }
 };
 
