@@ -248,10 +248,9 @@ var displayPantry = function () {
   loadPantryAPI();
 };
 
-var loadPantryLocalStorage = function () {
-  var items = JSON.parse(localStorage.getItem('pantryitems'));
-  var tempHtml = "";
-  tempHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
+var itemTable = function (items, divClass) {
+  var tableHTML = "";
+  tableHTML += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
   "<th>Quantity</th><th>Consume</th>";
   for (i=0; i<items.length;i++) {
     var item = items[i];
@@ -261,19 +260,24 @@ var loadPantryLocalStorage = function () {
     } else {
       expDate = cleanDate(item['expiration_date']);
     }
-      tempHtml += "<tr>" +
-          "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
-          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
-          "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
-          "</tr>";
+    tableHTML +=
+      "<tr>" +
+        "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
+        "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
+        "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
+        "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
+      "</tr>";
   }
   if (items.length === 0) {
-    tempHtml = "<h3>You don't have any items yet. Add some to get started.</h3>";
+    tableHTML = "<h3>You don't have any items yet. Add some to get started.</h3>";
   } else {
-    tempHtml += "</table>";
+    tableHTML += "</table>";
   }
-  $('.pantry').html(tempHtml);
+  $(divClass).html(tableHTML);
+};
+
+var loadPantryLocalStorage = function () {
+  itemTable(JSON.parse(localStorage.getItem('pantryitems')), '.pantry');
 };
 
 var loadPantryAPI = function () {
@@ -286,26 +290,12 @@ var loadPantryAPI = function () {
     url: baseURL + "/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
       var length = data['pantry_items'].length;
-      var pantryHtml = "";
       var itemsArr = [];
-      pantryHtml += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
-      "<th>Quantity</th><th>Consume</th>";
       for (i = 0; i < length; i++) {
         var item  = data['pantry_items'][i];
         itemsArr.push(item);
-        pantryHtml += "<tr>" +
-          "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
-          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
-          "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-          "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
-          "</tr>";
       }
-      if (length === 0) {
-        pantryHtml = "<h3>You don't have any items yet. Add some to get started.</h3>";
-      } else {
-        pantryHtml += "</table>";
-      }
-      $('.pantry').html(pantryHtml);
+      itemTable(data['pantry_items'], '.pantry');
 
       // reset localStorage to most up-to-date data
       localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
@@ -314,8 +304,8 @@ var loadPantryAPI = function () {
   })
   .fail(function (data) {
     console.log("Error, this failed.");
-    $('.flash').show();
-    $('.flash').text("Uh oh, this failed. Please try again.");
+    // $('.flash').show();
+    // $('.flash').text("Uh oh, this failed. Please try again.");
   });
   
 };
@@ -447,7 +437,12 @@ var displayExpiringSoon = function () {
     url: baseURL + "/api/v1/users/" + uid + "/expiring_soon",
     headers: {'Authorization': localStorage.token},
     success: function (data) {
-      console.log(data);
+      if (data.length === 0) {
+        expHtml = "You've got nothing expiring soon. Hooray!";
+      } else {
+        console.log(data);
+        itemTable(data, '.expiring');
+      }
     }
   })
   .fail(function () {
