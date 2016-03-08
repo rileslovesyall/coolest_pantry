@@ -248,7 +248,7 @@ var displayPantry = function () {
   loadPantryAPI();
 };
 
-var itemTable = function (items, divClass) {
+var displayItemTable = function (items, divClass) {
   var tableHTML = "";
   tableHTML += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
   "<th>Quantity</th><th>Consume</th>";
@@ -277,7 +277,7 @@ var itemTable = function (items, divClass) {
 };
 
 var loadPantryLocalStorage = function () {
-  itemTable(JSON.parse(localStorage.getItem('pantryitems')), '.pantry');
+  displayItemTable(JSON.parse(localStorage.getItem('pantryitems')), '.pantry');
 };
 
 var loadPantryAPI = function () {
@@ -295,7 +295,7 @@ var loadPantryAPI = function () {
         var item  = data['pantry_items'][i];
         itemsArr.push(item);
       }
-      itemTable(data['pantry_items'], '.pantry');
+      displayItemTable(data['pantry_items'], '.pantry');
 
       // reset localStorage to most up-to-date data
       localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
@@ -314,6 +314,35 @@ var loadPantryAPI = function () {
 //  SHOW PAGE METHODS
 // 
 
+var displaySingleItem = function (id, item, ingredients) {
+  var ingHtml = "<div class='ingredients-show'>";
+  if (ingredients) {
+    if (ingredients.length > 0) {
+      for (var i = 0; i < ingredients.length -1; i++) {
+        ingHtml += ingredients[i]['name'] + ", ";
+      }
+      ingHtml += ingredients[ingredients.length-1]['name'];
+    }
+  }
+  ingHtml += " </div>";
+
+  var description = "";
+  if (item['description'] !== null) {
+    description += "<div class='pantryitem-show description-show'>" + item['description'] + "</div>";
+  }
+  var pantryitemHtml = description +
+    "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
+    ingHtml +
+    "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
+    "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
+    "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
+    "<div class='row'>" +
+      "<div class='col-xs-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
+      "<div class='col-xs-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
+    "</div>";
+  $('.pantryitem').html(pantryitemHtml);
+};
+
 var viewItem = function (id) {
   // ajax call to get latest data
   $.ajax({
@@ -323,38 +352,7 @@ var viewItem = function (id) {
     success: function (data) {
       var item = data['pantryitem'];
       var ings = data['ingredients'];
-
-      var ingHtml = "<div class='ingredients-show'>";
-      if (ings.length > 0) {
-        for (var i = 0; i < ings.length -1; i++) {
-          ingHtml += ings[i]['name'] + ", ";
-        }
-        ingHtml += ings[ings.length-1]['name'];
-      }
-      ingHtml += " </div>";
-
-      var description = "";
-      if (item['description'] !== null) {
-        description += "<div class='pantryitem-show description-show'>" + item['description'] + "</div>";
-      }
-      var expDate;
-      if (item['expiration_date'] === null) {
-        expDate = 'N/A';
-      } else {
-        expDate = cleanDate(item['expiration_date']);
-      }
-      var pantryitemHtml = description +
-        "<div class='pantryitem-show exp-date-show'> Expiration Date: " + expDate + "</div>" +
-        "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
-        ingHtml +
-        "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
-        "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
-        "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
-        "<div class='row'>" +
-          "<div class='col-xs-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
-          "<div class='col-xs-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
-        "</div>";
-      $('.pantryitem').html(pantryitemHtml);
+      displaySingleItem(id, item, ings);
     }
   })
   .fail(function(data) {
@@ -362,6 +360,7 @@ var viewItem = function (id) {
   });
   // hide pantry div, display pantryitem div, set loading message / new header
   $('.pantry').hide();
+  $('.expiring').hide();
   $('.pantryitem').show();
   $('.pantryitem').html("<div class='loading-message'>Your item is loading.</div>");
 
@@ -370,27 +369,7 @@ var viewItem = function (id) {
   $('#header').text(currItem['name']);
 
   // pull info from localStorage
-  // var description = "";
-  // if (currItem['description'] !== null) {
-  //   description += "<div class='pantryitem-show description-show'>" + currItem['description'] + "</div>";
-  // }
-  // var exp;
-  // if (currItem['expiration_date'] === null) {
-  //   exp = 'N/A';
-  // } else {
-  //   exp = cleanDate(currItem['expiration_date']);
-  // }
-  // var tempHtml = description +
-  //   "<div class='pantryitem-show exp-date-show'> Expiration Date: " + exp + "</div>" +
-  //   "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + currItem['quantity'] + "</div>" +
-  //   "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
-  //   "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
-  //   "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
-  //   "<div class='row'>" +
-  //     "<div class='col-sm-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
-  //     "<div class='col-sm-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
-  //   "</div>";
-  // $('.pantryitem').html(tempHtml);
+  displaySingleItem(id, currItem);
 };
 
 
@@ -441,7 +420,7 @@ var displayExpiringSoon = function () {
         expHtml = "You've got nothing expiring soon. Hooray!";
       } else {
         console.log(data);
-        itemTable(data, '.expiring');
+        displayItemTable(data, '.expiring');
       }
     }
   })
@@ -576,6 +555,13 @@ $(document).ready(function () {
   $('.pantry').on('click', '.consume', function() {
     var id = $(this).attr('id');
     addConsumeItem(id, 'consume', 1);
+  });
+
+  // EXPIRING DIV
+
+  $('.expiring').on('click', '.item_name', function () {
+    var id = $(this).attr('id');
+    viewItem(id);
   });
 
   // PANTRYITEM SHOW DIV
