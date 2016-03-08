@@ -438,8 +438,22 @@ var addConsumeItem = function(id, action, quantity) {
 };
 
 var displayExpiringSoon = function () {
+  var uid = localStorage.uid;
   $('.expiring').show();
-  expHtml = "Some Stuf";
+  $('#header').text('Expiring Soon');
+  expHtml = "";
+  $.ajax({
+    type: "GET",
+    url: baseURL + "/api/v1/users/" + uid + "/expiring_soon",
+    headers: {'Authorization': localStorage.token},
+    success: function (data) {
+      console.log(data);
+    }
+  })
+  .fail(function () {
+    console.log('This failed');
+  });
+
   $('.expiring').html(expHtml);
 };
 
