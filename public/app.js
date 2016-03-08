@@ -13,6 +13,7 @@ var setNavbar = function () {
   if (localStorage.token !== undefined) {
     navbarHtml += "<a class='pantry-link nav-link'>My Pantry</a> / ";
     navbarHtml += "<a class='add-item nav-link'>Add Item</a> / ";
+    navbarHtml += "<a class='expiring-soon nav-link'>Expiring Soon</a> / ";
     navbarHtml += "<a class='logout nav-link'>Logout</a>";
   }
 
@@ -183,6 +184,7 @@ var submitLogin = function () {
       displayPantry();
     } else {
       console.log(data['error']);
+      flashMessage(data['error']);
     }
   })
   .fail(function (data){
@@ -435,6 +437,12 @@ var addConsumeItem = function(id, action, quantity) {
   });
 };
 
+var displayExpiringSoon = function () {
+  $('.expiring').show();
+  expHtml = "Some Stuf";
+  $('.expiring').html(expHtml);
+};
+
 // 
 // 
 // 
@@ -456,8 +464,6 @@ $(document).ready(function () {
 
   setNavbar();
 
-  // load login
-  // CHANGE THIS TO BE SPLASH PAGE
   if (localStorage.token) {
     displayPantry();
   } else {
@@ -469,6 +475,7 @@ $(document).ready(function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.splash').hide();
+    $('.expiring').hide();
     $('.navbar').show();
     displayLoginForm();
   });
@@ -477,6 +484,7 @@ $(document).ready(function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.splash').hide();
+    $('.expiring').hide();
     $('.navbar').show();
     displaySignupForm();
   });
@@ -487,12 +495,14 @@ $(document).ready(function () {
   $('.navbar').on('click', '.login', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
+    $('.expiring').hide();
     displayLoginForm();
   });
 
   $('.navbar').on('click', '.signup', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
+    $('.expiring').hide();
     displaySignupForm();
   });
 
@@ -501,6 +511,7 @@ $(document).ready(function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.form-holder').hide();
+    $('.expiring').hide();
     $('#header').hide();
     setNavbar();
     displaySplash();
@@ -510,13 +521,22 @@ $(document).ready(function () {
   $('.navbar').on('click', '.pantry-link', function () {
     $('.form-holder').hide();
     $('.pantryitem').hide();
+    $('.expiring').hide();
     displayPantry();
   });
 
   $('.navbar').on('click', '.add-item', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
+    $('.expiring').hide();
     displayItemForm();
+  });
+
+  $('.navbar').on('click', '.expiring-soon', function () {
+    $('.pantry').hide();
+    $('.pantryitem').hide();
+    $('.form-holder').hide();
+    displayExpiringSoon();
   });
 
   // FORM DIV
