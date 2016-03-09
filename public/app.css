@@ -83,6 +83,7 @@ body {
 .content {
   width: 700px;
   margin: 0 auto;
+  padding: 10px;
 }
 
 .content-background {
@@ -101,6 +102,7 @@ body {
 .content-content {
   position: relative;
   z-index: 5;
+  padding: 20px
 }
 
 a {
@@ -115,11 +117,6 @@ h1 {
 th {
   font-family: 'Special Elite', cursive;
   font-size: 22px;
-}
-
-.table {
-  width: 700px;
-  margin: 0 auto;
 }
 
 .table>tbody>tr>th {
