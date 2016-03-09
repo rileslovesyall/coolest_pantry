@@ -162,6 +162,12 @@ th {
   margin: 0 auto;
 }
 
+.form-holder {
+  width: 75%;
+  margin: 0 auto;
+  padding-top: 18px;
+}
+
 .description-show {
   font-size: 24px;
   margin-bottom: 20px;
