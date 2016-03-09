@@ -1,5 +1,5 @@
 body {
-  font-family: 'Nixie One', sans-serif;
+  font-family: 'Quattrocento Sans', sans-serif;
   margin: 0 auto;
   font-size: 18px;
 }
@@ -15,7 +15,7 @@ body {
 }
 
 .nav-link {
-  color: white;
+  color: #EBEBEB;
 }
 
 .flash {
@@ -38,7 +38,7 @@ body {
   -o-background-size: cover;
   background-size: cover;
   color: #F2F2F2;
-  font-family: 'Special Elite', cursive;
+  font-family: 'Homemade Apple', cursive;
 }
 
 #splash-header {
@@ -106,20 +106,20 @@ body {
 }
 
 a {
-  color: white;
+  color: #EBEBEB;
 }
 
 a:visited {
-  color: white;
+  color: #EBEBEB;
 }
 
 h1 {
-  font-family: 'Special Elite', cursive;
+  font-family: 'Homemade Apple', cursive;
   text-align: center;
 }
 
 th {
-  font-family: 'Special Elite', cursive;
+  font-family: 'Cedarville Cursive', cursive;
   font-size: 22px;
   text-align: center;
 }
@@ -129,7 +129,7 @@ th {
 }
 
 .table>tbody>tr>td.td-not-button {
-  font-size: 16px;
+  font-size: 18px;
   padding-top: 13px;
 }
 
