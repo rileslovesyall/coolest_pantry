@@ -250,8 +250,8 @@ var displayPantry = function () {
 
 var displayItemTable = function (items, divClass) {
   var tableHTML = "";
-  tableHTML += "<table class='table table-responsive table-hover' id='pantry-table'><th>Item</th><th>Portion Size</th>" +
-  "<th>Quantity</th><th>Consume</th>";
+  tableHTML += "<table class='table table-responsive' id='pantry-table'><th>item</th><th>portion size</th>" +
+  "<th>quantity</th><th>consume</th>";
   for (i=0; i<items.length;i++) {
     var item = items[i];
     var expDate;
