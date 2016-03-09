@@ -117,6 +117,7 @@ h1 {
 th {
   font-family: 'Special Elite', cursive;
   font-size: 22px;
+  text-align: center;
 }
 
 .table>tbody>tr>th {
