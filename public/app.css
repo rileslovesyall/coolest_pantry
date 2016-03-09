@@ -15,7 +15,7 @@ body {
 }
 
 .nav-link {
-  color: #797C7D;
+  color: white;
 }
 
 .flash {
@@ -106,6 +106,10 @@ body {
 }
 
 a {
+  color: white;
+}
+
+a:visited {
   color: white;
 }
 
