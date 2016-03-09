@@ -455,11 +455,13 @@ $(document).ready(function () {
   if (localStorage.token) {
     displayPantry();
   } else {
+    $('.background').hide();
     displaySplash();
   }
 
   // SPLASH DIV
   $('.splash').on('click', '#splash-login', function () {
+    $('.background').show();
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.splash').hide();
@@ -469,6 +471,7 @@ $(document).ready(function () {
   });
 
   $('.splash').on('click', '#splash-signup', function () {
+    $('.background').show();
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.splash').hide();
@@ -496,11 +499,12 @@ $(document).ready(function () {
 
   $('.navbar').on('click', '.logout', function () {
     localStorage.clear();
-    $('.pantry').hide();
-    $('.pantryitem').hide();
-    $('.form-holder').hide();
-    $('.expiring').hide();
-    $('#header').hide();
+    // $('.pantry').hide();
+    // $('.pantryitem').hide();
+    // $('.form-holder').hide();
+    // $('.expiring').hide();
+    // $('#header').hide();
+    $('.background').hide();
     setNavbar();
     displaySplash();
 
