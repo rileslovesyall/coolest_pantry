@@ -91,12 +91,12 @@ body {
   width: 700px;
   margin: 0 auto;
   height: 100%;
-  background-color: #C0CDD1;
+  background-color: #454545;
   z-index: 1;
    These three lines are for transparency in all browsers. 
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-  filter: alpha(opacity=20);
-  opacity: .2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+  filter: alpha(opacity=40);
+  opacity: .4;
 }
 
 .content-content {
