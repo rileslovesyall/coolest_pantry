@@ -113,9 +113,10 @@ a:visited {
   color: #F2F2F2;
 }
 
-h1 {
+#header {
   font-family: 'Homemade Apple', cursive;
   text-align: center;
+  padding-bottom: 18px;
 }
 
 th {
@@ -166,7 +167,6 @@ th {
 .form-holder {
   width: 75%;
   margin: 0 auto;
-  padding-top: 18px;
 }
 
 .description-show {
