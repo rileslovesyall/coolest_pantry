@@ -319,9 +319,7 @@ var loadPantryAPI = function () {
     }
   })
   .fail(function (data) {
-    console.log("Error, this failed.");
-    // $('.flash').show();
-    // $('.flash').text("Uh oh, this failed. Please try again.");
+    console.log("Error, loading from the API failed.");
   });
   
 };
