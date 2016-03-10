@@ -24,8 +24,8 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "http://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "http://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -69,7 +69,7 @@ var dirty = function(str) {
 
 var displayItemForm = function (id) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
-  var name, description, portion, quantity, expDate, ingredients, submitClass, formClass, headerText;
+  var name, description, portion, quantity, daysToExp, ingredients, submitClass, formClass, headerText;
   if (item !== null) {
     name = clean(item['name']);
     if (item['description' === undefined]) {
@@ -79,7 +79,6 @@ var displayItemForm = function (id) {
     }
     portion = item['portion'];
     quantity = item['quantity'];
-    expDate = item['expiration-date'];
     if (item['ingredients'] === undefined) {
       ingredients = '';
     } else {
@@ -93,7 +92,6 @@ var displayItemForm = function (id) {
     description = '';
     portion = '';
     quantity = '';
-    expDate = '';
     ingredients = '';
     submitClass = 'add-item';
     formClass = 'add-form';
@@ -102,21 +100,40 @@ var displayItemForm = function (id) {
   var formHtml =
     "<form class='"+formClass+"'>" +
       "<fieldset class='form-group'>" +
-        "<label for='name'>Name: </label>" +
-        "<input class='form-control' for='name' id='name' type='text' name='name' required value='"+name+"'>" +
-        "<label for='description'>Description </label>" +
-        "<input class='form-control for='description' id='description' name='description' value='"+description+"''>" +
-        "<label for='portion'>Portion Size: </label>" +
-        "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
-        "<input class='form-control' name = 'portion' for='portion' id='portion' required value='"+portion+"'>";
+        "<div class='form-group'>" +
+          "<label for='name'> Item Name: </label>" +
+          "<input class='form-control' for='name' id='name' type='text' name='name' required value='"+name+"'>" +
+        "</div>" +
+        "<div class='form-group'>" +
+          "<label for='description'>Description: </label>" +
+          "<textarea class='form-control for='description' id='description' name='description' value='"+description+"''></textarea>" +
+        "</div>" +
+        "<div class='form-group'>" +
+          "<label for='portion'>Portion Size: </label>" +
+          "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
+          "<input class='form-control' name = 'portion' for='portion' id='portion' required value='"+portion+"'>" +
+        "</div>";
         if (formClass === 'add-form') {
-          formHtml += "<label for='quantity'>Quantity: </label> " +
-        "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>";
+          formHtml += "<div class='form-group'>" +
+            "<label for='quantity'>Quantity: </label> " +
+            "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>" +
+           "</div>";
+          formHtml += "<div class='form-group'>" +
+            "<label for='time-to-exp'>Time Until Expiration:</label>" +
+            "<input class='form-control'for='time-to-exp' id='time-to-exp' type='number' name='time-to-exp' required>" +
+            "<select class='form-control' name='exp-unit' id='exp-unit' required>" +
+              "<option value='days'>Day(s)</option>" +
+              "<option value='months'>Month(s)</option>" +
+              "<option value='years'>Year(s)</option>" +
+            "</select>" +
+          "</div>";
         }
         formHtml +=
-        "<label for='ingredients'>Ingredients: </label>" +
-        "<div class='form-note'>(please separate with a comma)</div>" +
-        "<input class='form-control' for='ingredients' id='ingredients' name='ingredients' value='"+ingredients+"'>" +
+        "<div class='form-group'>" +
+          "<label for='ingredients'>Ingredients: </label>" +
+          "<div class='form-note'>(please separate with a comma)</div>" +
+          "<textarea class='form-control' for='ingredients' id='ingredients'  name='ingredients' value='"+ingredients+"'></textarea>" +
+         "</div>" +
       "</fieldset>" +
       "<button class='"+submitClass+" btn btn-default' id='"+id+"'>Submit</button>" +
     "</form>";
@@ -499,11 +516,6 @@ $(document).ready(function () {
 
   $('.navbar').on('click', '.logout', function () {
     localStorage.clear();
-    // $('.pantry').hide();
-    // $('.pantryitem').hide();
-    // $('.form-holder').hide();
-    // $('.expiring').hide();
-    // $('#header').hide();
     $('.background').hide();
     setNavbar();
     displaySplash();
@@ -566,6 +578,10 @@ $(document).ready(function () {
   $('.expiring').on('click', '.item_name', function () {
     var id = $(this).attr('id');
     viewItem(id);
+  });
+  $('.expiring').on('click', '.consume', function() {
+    var id = $(this).attr('id');
+    addConsumeItem(id, 'consume', 1);
   });
 
   // PANTRYITEM SHOW DIV
