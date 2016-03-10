@@ -24,8 +24,8 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-var baseURL = "http://localhost:9393";
-// var baseURL = "http://api.pocketpantry.org";
+// var baseURL = "http://localhost:9393";
+var baseURL = "http://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -268,7 +268,7 @@ var displayPantry = function () {
 var displayItemTable = function (items, divClass) {
   var tableHTML = "";
   tableHTML += "<table class='table table-responsive' id='pantry-table'><th>item</th><th>portion size</th>" +
-  "<th>quantity</th><th>consume</th>";
+  "<th>quantity</th>";
   for (i=0; i<items.length;i++) {
     var item = items[i];
     var expDate;
@@ -282,7 +282,6 @@ var displayItemTable = function (items, divClass) {
         "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
         "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
         "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-        "<td class='consume' id="+item['id']+">" + "<button class='btn btn-default'> subtract one </button" + "</td>" +
       "</tr>";
   }
   if (items.length === 0) {
