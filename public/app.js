@@ -25,7 +25,7 @@ var setNavbar = function () {
 //
 
 // var baseURL = "http://localhost:9393";
-var baseURL = "http://api.pocketpantry.org";
+var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString);
@@ -69,7 +69,8 @@ var dirty = function(str) {
 
 var displayItemForm = function (id) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
-  var name, description, portion, quantity, daysToExp, ingredients, submitClass, formClass, headerText;
+  var ingredients = JSON.parse(localStorage.getItem('ingredients' + id));
+  var name, description, portion, quantity, submitClass, formClass, headerText;
   if (item !== null) {
     name = clean(item['name']);
     if (item['description'] === undefined) {
