@@ -72,7 +72,7 @@ var displayItemForm = function (id) {
   var name, description, portion, quantity, daysToExp, ingredients, submitClass, formClass, headerText;
   if (item !== null) {
     name = clean(item['name']);
-    if (item['description' === undefined]) {
+    if (item['description'] === undefined) {
       description = '';
     } else {
       description = item['description'];
@@ -106,7 +106,7 @@ var displayItemForm = function (id) {
         "</div>" +
         "<div class='form-group'>" +
           "<label for='description'>Description: </label>" +
-          "<textarea class='form-control for='description' id='description' name='description' value='"+description+"''></textarea>" +
+          "<textarea class='form-control for='description' id='description' name='description'>"+description+"</textarea>" +
         "</div>" +
         "<div class='form-group'>" +
           "<label for='portion'>Portion Size: </label>" +
