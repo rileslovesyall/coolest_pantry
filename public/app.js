@@ -463,6 +463,9 @@ var displayExpiringSoon = function () {
 
 $(document).ready(function () {
 
+  window.onbeforeunload = function(){
+  return 'Leaving this page will end your Pocket Pantry session.';
+};
   // hide flash div on click if it's been displayed
   $(document).click(function () {
     $('.flash').hide();
