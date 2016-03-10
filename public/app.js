@@ -69,7 +69,7 @@ var dirty = function(str) {
 
 var displayItemForm = function (id) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
-  var ingredients = JSON.parse(localStorage.getItem('ingredients' + id));
+  var ingredients = localStorage.getItem('ingredients' + id);
   var name, description, portion, quantity, submitClass, formClass, headerText;
   if (item !== null) {
     name = clean(item['name']);
@@ -80,11 +80,6 @@ var displayItemForm = function (id) {
     }
     portion = item['portion'];
     quantity = item['quantity'];
-    // if (item['ingredients'] === undefined) {
-    //   ingredients = '';
-    // } else {
-    //   ingredients = item['ingredients'];
-    // }
     submitClass = 'edit-item';
     formClass = 'edit-form';
     headerText = 'Edit Item';
@@ -133,7 +128,7 @@ var displayItemForm = function (id) {
         "<div class='form-group'>" +
           "<label for='ingredients'>Ingredients: </label>" +
           "<div class='form-note'>(please separate with a comma)</div>" +
-          "<textarea class='form-control' for='ingredients' id='ingredients'  name='ingredients' value='"+ingredients+"'></textarea>" +
+          "<textarea class='form-control' for='ingredients' id='ingredients'  name='ingredients'>"+ingredients+"</textarea>" +
          "</div>" +
       "</fieldset>" +
       "<button class='"+submitClass+" btn btn-default' id='"+id+"'>Submit</button>" +
