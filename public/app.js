@@ -80,11 +80,11 @@ var displayItemForm = function (id) {
     }
     portion = item['portion'];
     quantity = item['quantity'];
-    if (item['ingredients'] === undefined) {
-      ingredients = '';
-    } else {
-      ingredients = item['ingredients'];
-    }
+    // if (item['ingredients'] === undefined) {
+    //   ingredients = '';
+    // } else {
+    //   ingredients = item['ingredients'];
+    // }
     submitClass = 'edit-item';
     formClass = 'edit-form';
     headerText = 'Edit Item';
@@ -331,13 +331,15 @@ var loadPantryAPI = function () {
 
 var displaySingleItem = function (id, item, ingredients) {
   var ingHtml = "<div class='ingredients-show'>";
-  if (ingredients) {
+  if (Array.isArray(ingredients)) {
     if (ingredients.length > 0) {
       for (var i = 0; i < ingredients.length -1; i++) {
         ingHtml += ingredients[i]['name'] + ", ";
       }
       ingHtml += ingredients[ingredients.length-1]['name'];
     }
+  } else {
+    ingHtml += ingredients;
   }
   ingHtml += " </div>";
 
@@ -367,7 +369,13 @@ var viewItem = function (id) {
     success: function (data) {
       var item = data['pantryitem'];
       var ings = data['ingredients'];
+      console.log(ings);
       displaySingleItem(id, item, ings);
+      var ingString = ings[0]['name'];
+      for (var i = 1; i < ings.length; i++) {
+        ingString += ", " + ings[i]['name'];
+      }
+      localStorage.setItem('ingredients'+item['id'], ingString);
     }
   })
   .fail(function(data) {
@@ -381,10 +389,14 @@ var viewItem = function (id) {
 
   // get current item from local Storage and set header
   var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
+  var ingredients = localStorage.getItem('ingredients' + id);
+  // if (ingredients === undefined) {
+  //   ingredients = "";
+  // }
   $('#header').text(currItem['name']);
 
   // pull info from localStorage
-  displaySingleItem(id, currItem);
+  displaySingleItem(id, currItem, ingredients);
 };
 
 
