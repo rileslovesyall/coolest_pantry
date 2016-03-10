@@ -326,7 +326,7 @@ var loadPantryAPI = function () {
 };
 
 // 
-//  SHOW PAGE METHODS
+//  SHOW SINGLE ITEM PAGE METHODS
 // 
 
 var displaySingleItem = function (id, item, ingredients) {
@@ -338,7 +338,7 @@ var displaySingleItem = function (id, item, ingredients) {
       }
       ingHtml += ingredients[ingredients.length-1]['name'];
     }
-  } else {
+  } else if (ingredients !== null){
     ingHtml += ingredients;
   }
   ingHtml += " </div>";
@@ -369,14 +369,17 @@ var viewItem = function (id) {
     success: function (data) {
       var item = data['pantryitem'];
       var ings = data['ingredients'];
-      console.log(ings);
       displaySingleItem(id, item, ings);
-      var ingString = ings[0]['name'];
-      for (var i = 1; i < ings.length; i++) {
-        ingString += ", " + ings[i]['name'];
+
+      // save most recent ingredients list to localStorage
+      if (ings.length > 0) {
+          var ingString = ings[0]['name'];
+          for (var i = 1; i < ings.length; i++) {
+            ingString += ", " + ings[i]['name'];
+          }
+          localStorage.setItem('ingredients'+item['id'], ingString);
+        }
       }
-      localStorage.setItem('ingredients'+item['id'], ingString);
-    }
   })
   .fail(function(data) {
     console.log("Uh oh, this failed.");
@@ -390,9 +393,6 @@ var viewItem = function (id) {
   // get current item from local Storage and set header
   var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
   var ingredients = localStorage.getItem('ingredients' + id);
-  // if (ingredients === undefined) {
-  //   ingredients = "";
-  // }
   $('#header').text(currItem['name']);
 
   // pull info from localStorage
