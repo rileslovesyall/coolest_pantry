@@ -205,16 +205,6 @@ th {
   margin-bottom: 20px;
 }
 
-.add {
-  margin-top: 25px;
-  margin-right: 10px;
-}
-
-.consume-show {
-  margin-top: 25px;
-  margin-left: 10px;
-}
-
 .ingredients-show {
   margin-top: 20px;
   font-size: 26px;
@@ -226,6 +216,8 @@ th {
 }
 
 .sm-button {
+  margin-top: 25px;
+  margin-right: 10px;
   height: 40px;
   font-size: 18px;
 }
@@ -238,7 +230,7 @@ th {
   font-size: 24px;
 }
 
-.edit-btn {
+.consume {
   margin-left: 30%;
 }
 
@@ -246,11 +238,11 @@ th {
   margin-right: 40%;
 }
 
-.bulk-add-submit {
+.bulk-quant-submit {
   margin-left: 8px;
 }
 
-.bulk-add-form {
+.bulk-quant-form {
   margin-top: 20px;
 }
 

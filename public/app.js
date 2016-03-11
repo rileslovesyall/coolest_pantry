@@ -26,7 +26,6 @@ var setNavbar = function () {
 
 // var baseURL = "http://localhost:9393";
 var baseURL = "https://api.pocketpantry.org";
-// var baseURL = "http://api-omg.fma6qbyxhf.us-west-2.elasticbeanstalk.com";
 
 var cleanDate = function(dateString) {
   var date = new Date(dateString); 
@@ -302,6 +301,7 @@ var loadPantryAPI = function () {
     headers: {'Authorization': token},
     url: baseURL + "/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
+      console.log(data)
       var length = data['pantry_items'].length;
       var itemsArr = [];
       for (i = 0; i < length; i++) {
@@ -346,11 +346,9 @@ var displaySingleItem = function (id, item, ingredients) {
   var pantryitemHtml = description +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
     ingHtml +
-    "<button class='add btn btn-default sm-button' id="+id+"> Quick Add </button>" +
-    "<button class='show-pantry btn btn-default sm-button'> Back to Pantry </button>" +
-    "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
+    "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button>" +
     "<div class='row'>" +
-      "<div class='col-xs-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
+      "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +
       "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
   $('.pantryitem').html(pantryitemHtml);
@@ -416,9 +414,14 @@ var addConsumeItem = function(id, action, quantity) {
           currItem['quantity'] -= 1;
         }
         localStorage.setItem('pantryitem' + id, JSON.stringify(currItem));
+        if (action == 'add') {
+          flashMessage("You have " + action + "ed " + quantity + " " + currItem['name'] + "(s) to your inventory.");
+        } else {
+          flashMessage("You have " + action + "d " + quantity + " " + currItem['name'] + "(s) from your inventory.");
+        }
+        
       } else {
-        $('.flash').show();
-        $('.flash').text(error['message']);
+        flashMessage(error['message']);
       }
     }
   })
@@ -454,16 +457,16 @@ var displayExpiringSoon = function () {
   $('.expiring').html(expHtml);
 };
 
-var displayBulkAdd = function (id) {
+var displayBulkQuant = function (id, action) {
   event.preventDefault();
   var addHtml = "";
-  addHtml += "<div class='form-group bulk-add-form'>" +
+  addHtml += "<div class='form-group bulk-quant-form'>" +
     "<label for='quantity'>Quantity: </label> " +
     "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>" +
-    "<button class='btn btn-default bulk-add-submit' id='"+id+"'>Add</button>" +
+    "<button class='btn btn-default bulk-quant-submit' id='"+id+"'>"+action+"</button>" +
    "</div>";
 
-  $('.pantryitem').append(addHtml);
+  $('.add-consume').html(addHtml);
 };
 
 // 
@@ -612,32 +615,31 @@ $(document).ready(function () {
     addConsumeItem(id, 'add', 1);
   });
 
-  $('.pantryitem').on('click', '.consume', function() {
-    var id = $(this).attr('id');
-    addConsumeItem(id, 'consume', 1);
-  });
-
-  $('.pantryitem').on('click', '.show-pantry', function () {
-    $('.pantryitem').hide();
-    displayPantry();
-  });
-
-  $('.pantryitem').on('click', '.bulk-add-btn', function () {
-    var id = $(this).attr('id');
-    displayBulkAdd(id);
-  });
-
   $('.pantryitem').on('click', '.edit-btn', function () {
     var id = $(this).attr('id');
     $('.pantryitem').hide();
     displayItemForm(id);
   });
 
-  $('.pantryitem').on('click', '.bulk-add-submit', function() {
+  $('.pantryitem').on('click', '.bulk-add-btn', function () {
+    var id = $(this).attr('id');
+    displayBulkQuant(id, 'Add');
+  });
+
+  $('.pantryitem').on('click', '.consume', function() {
+    var id = $(this).attr('id');
+    displayBulkQuant(id, 'Consume');
+  });
+
+  // ADD CONSUME FORM CLICK
+
+  $('.add-consume').on('click', '.bulk-quant-submit', function() {
     event.preventDefault();
     var id = $(this).attr('id');
     var quant = $('#quantity').val();
-    addConsumeItem(id, 'add', quant);
+    var action = $('.bulk-quant-submit').text().toLowerCase();
+    addConsumeItem(id, action, quant);
+    $('.bulk-quant-form').hide();
   });
 
 
