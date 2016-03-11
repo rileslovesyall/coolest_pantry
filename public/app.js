@@ -421,7 +421,8 @@ var addConsumeItem = function(id, action, quantity) {
         }
         
       } else {
-        flashMessage(error['message']);
+        console.log(data)
+        flashMessage(data['error']);
       }
     }
   })
