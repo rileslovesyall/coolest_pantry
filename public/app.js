@@ -24,8 +24,8 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-var baseURL = "http://localhost:9393";
-// var baseURL = "https://api.pocketpantry.org";
+// var baseURL = "http://localhost:9393";
+var baseURL = "https://api.pocketpantry.org";
 // var baseURL = "http://api-omg.fma6qbyxhf.us-west-2.elasticbeanstalk.com";
 
 var cleanDate = function(dateString) {
