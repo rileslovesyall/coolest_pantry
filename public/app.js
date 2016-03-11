@@ -24,11 +24,12 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "https://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "https://api.pocketpantry.org";
+// var baseURL = "http://api-omg.fma6qbyxhf.us-west-2.elasticbeanstalk.com";
 
 var cleanDate = function(dateString) {
-  var date = new Date(dateString);
+  var date = new Date(dateString); 
   var day = date.getDate();
   var month = date.getMonth() + 1;
   var year = date.getFullYear();
@@ -350,7 +351,7 @@ var displaySingleItem = function (id, item, ingredients) {
     "<button class='consume consume-show btn btn-default sm-button' id="+id+"> Consume </button>" +
     "<div class='row'>" +
       "<div class='col-xs-6'><button class='edit-btn btn btn-default big-button' id="+id+">Edit Item</button></div>" +
-      "<div class='col-xs-6'><button class='bulk-add btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
+      "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
   $('.pantryitem').html(pantryitemHtml);
 };
@@ -451,6 +452,18 @@ var displayExpiringSoon = function () {
   });
 
   $('.expiring').html(expHtml);
+};
+
+var displayBulkAdd = function (id) {
+  event.preventDefault();
+  var addHtml = "";
+  addHtml += "<div class='form-group bulk-add-form'>" +
+    "<label for='quantity'>Quantity: </label> " +
+    "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>" +
+    "<button class='btn btn-default bulk-add-submit' id='"+id+"'>Add</button>" +
+   "</div>";
+
+  $('.pantryitem').append(addHtml);
 };
 
 // 
@@ -609,15 +622,22 @@ $(document).ready(function () {
     displayPantry();
   });
 
-  $('.pantryitem').on('click', '.bulk-add', function () {
-    $('.pantryitem').hide();
-    displayPantry();
+  $('.pantryitem').on('click', '.bulk-add-btn', function () {
+    var id = $(this).attr('id');
+    displayBulkAdd(id);
   });
 
   $('.pantryitem').on('click', '.edit-btn', function () {
     var id = $(this).attr('id');
     $('.pantryitem').hide();
     displayItemForm(id);
+  });
+
+  $('.pantryitem').on('click', '.bulk-add-submit', function() {
+    event.preventDefault();
+    var id = $(this).attr('id');
+    var quant = $('#quantity').val();
+    addConsumeItem(id, 'add', quant);
   });
 
 
