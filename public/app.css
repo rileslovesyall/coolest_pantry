@@ -129,6 +129,10 @@ th {
   text-align: center;
 }
 
+.table>tbody>tr>th {
+  padding-top: 17px;
+}
+
 .table>tbody>tr>td.td-not-button {
   font-size: 18px;
   padding-top: 13px;

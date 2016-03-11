@@ -11,9 +11,10 @@ var setNavbar = function () {
   }
 
   if (localStorage.token !== undefined) {
-    navbarHtml += "<a class='pantry-link nav-link'>My Pantry</a> / ";
+    navbarHtml += "<a class='curr-pantry-link nav-link'>Current Pantry</a> / ";
     navbarHtml += "<a class='add-item nav-link'>Add Item</a> / ";
     navbarHtml += "<a class='expiring-soon nav-link'>Expiring Soon</a> / ";
+    navbarHtml += "<a class='out-of-stock nav-link'>Out of Stock</a> / ";
     navbarHtml += "<a class='logout nav-link'>Logout</a>";
   }
 
@@ -255,7 +256,7 @@ var displayPantry = function () {
   $('.pantry').show();
   $('.pantry').html("<div class='loading-message'>Hold tight. Your pantry is loading.</div>");
   $('#header').text(localStorage.getItem('name') + "'s Pantry");
-  if (localStorage.getItem('pantryitems') !== null) {
+  if (localStorage.getItem('currentPantry')) {
     loadPantryLocalStorage();
   }
   loadPantryAPI();
@@ -289,7 +290,7 @@ var displayItemTable = function (items, divClass) {
 };
 
 var loadPantryLocalStorage = function () {
-  displayItemTable(JSON.parse(localStorage.getItem('pantryitems')), '.pantry');
+  displayItemTable(JSON.parse(localStorage.getItem('currentPantry')), '.pantry');
 };
 
 var loadPantryAPI = function () {
@@ -301,7 +302,6 @@ var loadPantryAPI = function () {
     headers: {'Authorization': token},
     url: baseURL + "/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
-      console.log(data)
       var length = data['pantry_items'].length;
       var itemsArr = [];
       for (i = 0; i < length; i++) {
@@ -311,7 +311,7 @@ var loadPantryAPI = function () {
       displayItemTable(data['pantry_items'], '.pantry');
 
       // reset localStorage to most up-to-date data
-      localStorage.setItem('pantryitems', JSON.stringify(itemsArr));
+      localStorage.setItem('currentPantry', JSON.stringify(itemsArr));
       storeEachToLocalStorage(itemsArr);
     }
   })
@@ -319,6 +319,67 @@ var loadPantryAPI = function () {
     console.log("Error, loading from the API failed.");
   });
   
+};
+
+var displayExpiringSoon = function () {
+  $('.pantry').html("");
+  $('.pantry').show();
+  var uid = localStorage.uid;
+  $('#header').text('Expiring Soon');
+  var expHtml = "";
+  $.ajax({
+    type: "GET",
+    url: baseURL + "/api/v1/users/" + uid + "/expiring_soon",
+    headers: {'Authorization': localStorage.token},
+    success: function (data) {
+      console.log(data);
+      if (data.length === 0) {
+        expHtml = "You've got nothing expiring soon. Hooray!";
+      } else {
+        displayItemTable(data, '.pantry');
+      }
+    }
+  })
+  .fail(function () {
+    flashMessage('Something went wrong. Please try again.');
+  });
+  $('.pantry').html(expHtml);
+};
+
+var displayOutOfStock = function () {
+  $('.pantry').html("");
+  $('.pantry').show();
+  var uid = localStorage.uid;
+  $('#header').text('Out of Stock Items');
+  $.ajax({
+    type: "GET",
+    url: baseURL + "/api/v1/users/" + uid + "/out-of-stock",
+    headers: {'Authorization': localStorage.token},
+    success: function (data) {
+      var length = data['pantry_items'].length;
+      var itemsArr = [];
+      for (i = 0; i < length; i++) {
+        var item  = data['pantry_items'][i];
+        itemsArr.push(item);
+      }
+      if (length === 0) {
+        $('.pantry').html("You've got nothing out of stock.");
+      } else {
+        displayItemTable(data['pantry_items'], '.pantry');
+      }
+
+      // reset localStorage to most up-to-date data
+      localStorage.setItem('outOfStock', JSON.stringify(itemsArr));
+      storeEachToLocalStorage(itemsArr);
+    }
+  })
+  .fail(function () {
+    flashMessage('Something went wrong. Please try again.');
+  });
+  if (localStorage.getItem('outOfStock')) {
+    console.log(localStorage.getItem('outOfStock'));
+    displayItemTable(JSON.parse(localStorage.getItem('outOfStock')), '.pantry');
+  }
 };
 
 // 
@@ -380,7 +441,6 @@ var viewItem = function (id) {
   });
   // hide pantry div, display pantryitem div, set loading message / new header
   $('.pantry').hide();
-  $('.expiring').hide();
   $('.pantryitem').show();
   $('.pantryitem').html("<div class='loading-message'>Your item is loading.</div>");
 
@@ -419,9 +479,7 @@ var addConsumeItem = function(id, action, quantity) {
         } else {
           flashMessage("You have " + action + "d " + quantity + " " + currItem['name'] + "(s) from your inventory.");
         }
-        
       } else {
-        console.log(data)
         flashMessage(data['error']);
       }
     }
@@ -431,31 +489,6 @@ var addConsumeItem = function(id, action, quantity) {
     $('.flash').show();
     $('.flash').text("Uh oh, this failed. Please try again.");
   });
-};
-
-var displayExpiringSoon = function () {
-  var uid = localStorage.uid;
-  $('.expiring').show();
-  $('#header').text('Expiring Soon');
-  expHtml = "";
-  $.ajax({
-    type: "GET",
-    url: baseURL + "/api/v1/users/" + uid + "/expiring_soon",
-    headers: {'Authorization': localStorage.token},
-    success: function (data) {
-      if (data.length === 0) {
-        expHtml = "You've got nothing expiring soon. Hooray!";
-      } else {
-        console.log(data);
-        displayItemTable(data, '.expiring');
-      }
-    }
-  })
-  .fail(function () {
-    console.log('This failed');
-  });
-
-  $('.expiring').html(expHtml);
 };
 
 var displayBulkQuant = function (id, action) {
@@ -507,7 +540,6 @@ $(document).ready(function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.splash').hide();
-    $('.expiring').hide();
     $('.navbar').show();
     displayLoginForm();
   });
@@ -517,7 +549,6 @@ $(document).ready(function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
     $('.splash').hide();
-    $('.expiring').hide();
     $('.navbar').show();
     displaySignupForm();
   });
@@ -544,25 +575,27 @@ $(document).ready(function () {
     $('.background').hide();
     setNavbar();
     displaySplash();
-
   });
 
-  $('.navbar').on('click', '.pantry-link', function () {
+  $('.navbar').on('click', '.curr-pantry-link', function () {
     $('.form-holder').hide();
     $('.pantryitem').hide();
-    $('.expiring').hide();
     displayPantry();
+  });
+  
+  $('.navbar').on('click', '.out-of-stock', function () {
+    $('.form-holder').hide();
+    $('.pantryitem').hide();
+    displayOutOfStock();
   });
 
   $('.navbar').on('click', '.add-item', function () {
     $('.pantry').hide();
     $('.pantryitem').hide();
-    $('.expiring').hide();
     displayItemForm();
   });
 
   $('.navbar').on('click', '.expiring-soon', function () {
-    $('.pantry').hide();
     $('.pantryitem').hide();
     $('.form-holder').hide();
     displayExpiringSoon();
@@ -581,6 +614,7 @@ $(document).ready(function () {
   $('.form-holder').on('click', '.add-item', function () {
     submitItem('add');
   });
+
   $('.form-holder').on('click', '.edit-item', function () {
     var id = $(this).attr('id');
     submitItem('edit', id);
@@ -591,22 +625,6 @@ $(document).ready(function () {
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
     viewItem(id);
-  });
-  
-  $('.pantry').on('click', '.consume', function() {
-    var id = $(this).attr('id');
-    addConsumeItem(id, 'consume', 1);
-  });
-
-  // EXPIRING DIV
-
-  $('.expiring').on('click', '.item_name', function () {
-    var id = $(this).attr('id');
-    viewItem(id);
-  });
-  $('.expiring').on('click', '.consume', function() {
-    var id = $(this).attr('id');
-    addConsumeItem(id, 'consume', 1);
   });
 
   // PANTRYITEM SHOW DIV
@@ -639,6 +657,7 @@ $(document).ready(function () {
     var id = $(this).attr('id');
     var quant = $('#quantity').val();
     var action = $('.bulk-quant-submit').text().toLowerCase();
+    console.log(quant);
     addConsumeItem(id, action, quant);
     $('.bulk-quant-form').hide();
   });
