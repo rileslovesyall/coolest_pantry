@@ -210,14 +210,22 @@ var submitLogin = function () {
 var displaySignupForm = function () {
   var formHtml = "<form class='signup-form'>" +
     "<fieldset class='form-group'>" +
-      "<label for='name'>Name: </label>" +
-      "<input class='form-control' for='name' id='name' name='name' type='text'>" +
-      "<label for='email'>Email: </label>" +
-      "<input class='form-control' for='email' id='email' name='email' type='email'>" +
-      "<label for='password'>Password: </label>" +
-      "<input class='form-control' for='password' id='password' name='password' type='password'>" +
-      "<label for='password_confirmation'>Password Confirmation: </label>" +
-      "<input class='form-control' for='password_confirmation' id='password_confirmation' name='password' type='password'>" +
+      "<div class='form-group'>" +
+        "<label for='name'>Name: </label>" +
+        "<input class='form-control' for='name' id='name' name='name' type='text'>" +
+      "</div>" +
+      "<div class='form-group'>" +
+        "<label for='email'>Email: </label>" +
+        "<input class='form-control' for='email' id='email' name='email' type='email'>" +
+      "</div>" +
+      "<div class='form-group'>" +
+        "<label for='password'>Password: </label>" +
+        "<input class='form-control' for='password' id='password' name='password' type='password'>" +
+      "</div>" +
+      "<div class='form-group'>" +
+        "<label for='password_confirmation'>Password Confirmation: </label>" +
+        "<input class='form-control' for='password_confirmation' id='password_confirmation' name='password' type='password'>" +
+      "</div>" +
     "</fieldset>" +
     "<button class='btn btn-default signup-button'>Sign Up</button>" +
   "</form>";
@@ -657,7 +665,6 @@ $(document).ready(function () {
     var id = $(this).attr('id');
     var quant = $('#quantity').val();
     var action = $('.bulk-quant-submit').text().toLowerCase();
-    console.log(quant);
     addConsumeItem(id, action, quant);
     $('.bulk-quant-form').hide();
   });

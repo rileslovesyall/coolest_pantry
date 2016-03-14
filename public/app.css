@@ -123,6 +123,24 @@ a:visited {
   padding-bottom: 18px;
 }
 
+#email {
+  width: 65%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+#password {
+  width: 55%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+#password_confirmation {
+  width: 45%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
 th {
   font-family: 'Homemade Apple', cursive;
   font-size: 22px;
