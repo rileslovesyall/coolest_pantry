@@ -9,10 +9,10 @@ body {
 .navbar {
   margin-top: 8px;
   padding-top: 8px;
-  padding-bottom: 0;
+  padding-bottom: 5px;
   margin-bottom: 0;
   border-bottom: 1px solid #BDBDBD;
-  font-size: 18px;
+  font-size: 16px;
   color: #FAFAFA;
 }
 
@@ -79,20 +79,19 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-repeat: repeat;
+  background-repeat: repeat-y;
   color: #FAFAFA;
-
 }
 
 .content {
-  width: 700px;
+  width: 75%;
   margin: 0 auto;
   padding: 10px;
 }
 
 .content-background {
   position: absolute;
-  width: 700px;
+  width: 75%;
   margin: 0 auto;
   height: 100%;
   background-color: #454545;
@@ -121,6 +120,11 @@ a:visited {
   font-family: 'Homemade Apple', cursive;
   text-align: center;
   padding-bottom: 18px;
+  padding-top: 15px;
+}
+
+.navbar {
+  padding: 5px;
 }
 
 #email {
@@ -266,6 +270,36 @@ th {
 
 .bulk-quant-form {
   margin-top: 20px;
+}
+
+.account-info {
+  text-align: left;
+  font-size: 22px;
+  width: 65%;
+  margin: 0 auto;
+}
+
+.account-info>div {
+  margin: 5px;
+}
+
+.edit-account {
+  margin-top: 15px;
+}
+
+#exp_notif {
+  width: 15%;
+}
+
+#exp_soon_quant {
+  display: inline-block;
+  width: 15%;
+}
+
+#exp_soon_unit {
+  margin-left: 10px;
+  width: 20%;
+  display: inline-block;
 }
 
 footer {

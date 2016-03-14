@@ -14,7 +14,8 @@ var setNavbar = function () {
     navbarHtml += "<a class='curr-pantry-link nav-link'>Current Pantry</a> / ";
     navbarHtml += "<a class='add-item nav-link'>Add Item</a> / ";
     navbarHtml += "<a class='expiring-soon nav-link'>Expiring Soon</a> / ";
-    navbarHtml += "<a class='out-of-stock nav-link'>Out of Stock</a> / ";
+    navbarHtml += "<a class='out-of-stock-link nav-link'>Out of Stock</a> / ";
+    navbarHtml += "<a class='my-account nav-link'>My Account</a> / ";
     navbarHtml += "<a class='logout nav-link'>Logout</a>";
   }
 
@@ -171,10 +172,14 @@ var displayLoginForm = function () {
   var formHtml =
   "<form class='login-form'>" +
     "<fieldset class='form-group'>" +
-      "<label for='email'>Email: </label>" +
-      "<input class='form-control' for='email' id='email' name='email' type='email'>" +
-      "<label for='password'>Password: </label>" +
-      "<input class='form-control' for='password' id='password' name='password' type='password'>" +
+      "<div class='form-group'>" +
+        "<label for='email'>Email: </label>" +
+        "<input class='form-control' for='email' id='email' name='email' type='email'>" +
+      "</div>" +
+      "<div class='form-group'>" +
+        "<label for='password'>Password: </label>" +
+        "<input class='form-control' for='password' id='password' name='password' type='password'>" +
+      "</div>" +
     "</fieldset>" +
     "<button class='btn btn-default login-button'>Submit</button>" +
   "</form>";
@@ -193,6 +198,7 @@ var submitLogin = function () {
       localStorage.token = data['token'];
       localStorage.uid = data['uid'];
       localStorage.name = data['name'];
+      localStorage.user = JSON.serialize(data);
       setNavbar();
       $('.form-holder').hide();
       displayPantry();
@@ -244,6 +250,7 @@ var submitSignup = function () {
       localStorage.token = data['user']['api_token'];
       localStorage.uid = data['user']['id'];
       localStorage.name = data['user']['name'];
+      localStorage.user = JSON.serialize(data);
       $('.form-holder').hide();
       setNavbar();
       displayPantry();
@@ -252,12 +259,77 @@ var submitSignup = function () {
     }
   })
   .fail(function (data){
-    console.log('failed');
+    console.log('This request failed.');
+    flashMessage("Something went wrong. Please try again later.");
   });
 };
 
+var displayEditAccount = function () {
+  var user = JSON.parse(localStorage.user);
+  var formHTML = "";
+  formHTML +=
+    "<form class='edit-account-form'>" +
+      "<fieldset class='form-group'>" +
+        "<div class='form-group'>" +
+          "<label for='name'>Name: </label>" +
+          "<input class='form-control' for='name' id='name' name='name' type='text' value="+user['name']+">" +
+        "</div>" +
+        "<div class='form-group'>" +
+          "<label for='email'>Email: </label>" +
+          "<input class='form-control' for='email' id='email' name='email' type='email' value="+user['email']+">" +
+        "</div>" +
+        "<div class='form-group'>" +
+          "<label for='name'>Would you like to receive notifications when your items are expiring soon? </label>" +
+          "<select class='form-control' name='exp_notif' id='exp_notif' required>" +
+            "<option value='true'>Yes</option>" +
+            "<option value='false'>No</option>" +
+          "</select>" +
+        "</div>" +
+        "<div class='form-group'>" +
+          "<label for='exp_soon_days'>What Does 'Expiring Soon' Mean to You?</label>" +
+          "<input class='form-control'for='exp_soon_quant' id='exp_soon_quant' type='number' name='exp_soon_quant' value='2'required>" +
+          "<select class='form-control' name='exp_soon_units' id='exp_soon_units' required>" +
+            "<option value='days'>Day(s)</option>" +
+            "<option value='weeks' selected='selected'>Week(s)</option>" +
+          "</select>" +
+        "</div>" +
+        "<div class='form-group'>" +
+      "</fieldset>" +
+      "<button class='btn btn-default edit-account-button'>Submit</button>" +
+    "</form>";
+
+  $('.form-holder').show();
+  $('.form-holder').html(formHTML);
+};
+
+var submitEditAccount = function () {
+  event.preventDefault();
+  $.ajax({
+    type: 'POST',
+    url: baseURL + '/api/v1/users/' + localStorage.uid,
+    headers: {'Authorization': localStorage.token},
+    data: $('.edit-account-form').serialize()
+  })
+  .done(function (data) {
+    console.log(data);
+    if (data['errors'] !== undefined) {
+      flashMessage("We're sorry. Something went wrong with your update.");
+    } else if (data['message'] === "Sorry, this request can not be authenticated. Try again.") {
+      flashMessage("We're sorry. Something went wrong with your update.");
+    } else {
+      flashMessage("Your account has been updated.");
+    }
+  })
+  .fail(function (data) {
+    console.log(data);
+    flashMessage("Something went wrong. Please try again soon.");
+  });
+  $('.form-holder').hide();
+  accountDisplayRouter();
+};
+
 // 
-// PANTRY DISPLAY METHODS
+// PANTRY / TABLE DISPLAY METHODS
 // 
 
 var displayPantry = function () {
@@ -303,11 +375,10 @@ var loadPantryLocalStorage = function () {
 
 var loadPantryAPI = function () {
   var uid = localStorage.uid;
-  var token = localStorage.token;
 
   $.ajax({
     type:"GET",
-    headers: {'Authorization': token},
+    headers: {'Authorization': localStorage.token},
     url: baseURL + "/api/v1/users/" + uid + "/personal_pantry",
     success: function(data) {
       var length = data['pantry_items'].length;
@@ -330,11 +401,9 @@ var loadPantryAPI = function () {
 };
 
 var displayExpiringSoon = function () {
-  $('.pantry').html("");
-  $('.pantry').show();
+  $('.expiring').show();
   var uid = localStorage.uid;
   $('#header').text('Expiring Soon');
-  var expHtml = "";
   $.ajax({
     type: "GET",
     url: baseURL + "/api/v1/users/" + uid + "/expiring_soon",
@@ -344,19 +413,17 @@ var displayExpiringSoon = function () {
       if (data.length === 0) {
         expHtml = "You've got nothing expiring soon. Hooray!";
       } else {
-        displayItemTable(data, '.pantry');
+        displayItemTable(data, '.expiring');
       }
     }
   })
   .fail(function () {
     flashMessage('Something went wrong. Please try again.');
   });
-  $('.pantry').html(expHtml);
 };
 
 var displayOutOfStock = function () {
-  $('.pantry').html("");
-  $('.pantry').show();
+  $('.out-of-stock').show();
   var uid = localStorage.uid;
   $('#header').text('Out of Stock Items');
   $.ajax({
@@ -371,9 +438,9 @@ var displayOutOfStock = function () {
         itemsArr.push(item);
       }
       if (length === 0) {
-        $('.pantry').html("You've got nothing out of stock.");
+        $('.out-of-stock').html("You've got nothing out of stock.");
       } else {
-        displayItemTable(data['pantry_items'], '.pantry');
+        displayItemTable(data['pantry_items'], '.out-of-stock');
       }
 
       // reset localStorage to most up-to-date data
@@ -386,8 +453,59 @@ var displayOutOfStock = function () {
   });
   if (localStorage.getItem('outOfStock')) {
     console.log(localStorage.getItem('outOfStock'));
-    displayItemTable(JSON.parse(localStorage.getItem('outOfStock')), '.pantry');
+    displayItemTable(JSON.parse(localStorage.getItem('outOfStock')), '.out-of-stock');
   }
+};
+
+//
+// ACCOUNT DISPLAY METHODS
+//
+
+var accountDisplayRouter = function () {
+  $('.account').show();
+  if (localStorage.user !== undefined) {
+    displayMyAccount(JSON.parse(localStorage.user));
+  }
+  $.ajax({
+    type: 'GET',
+    url: baseURL + '/api/v1/users/' + localStorage.uid,
+    headers: {'Authorization': localStorage.token},
+    success: function (data) {
+      console.log(data);
+      displayMyAccount(data);
+      localStorage.user = JSON.stringify(data);
+    }
+  })
+  .fail(function () {
+    console.log('This failed.');
+  });
+};
+
+var displayMyAccount = function (user) {
+  var accountHTML = "";
+  var exp = "";
+  if (user.exp_notif === true) {
+    exp = "On";
+  } else {
+    exp = "Off";
+  }
+  var exp_soon = "";
+  if (user.exp_soon_days < 7) {
+    exp_soon = user.exp_soon + " days";
+  } else {
+    exp_soon = (user.exp_soon_days / 7) + " weeks";
+  }
+  accountHTML +=
+    "<div class='account-info'>" +
+      "<div class='account-name'>Name: " +user['name']+ "</div>" +
+      "<div class='account-email'><strong>Email:</strong> " +user['email']+ "</div>" +
+      "<div class='account-exp-notif'>Expiration Notifications: "+exp+"</div>" +
+      "<div class='account-exp-days'>Expiring Soon Setting: " +exp_soon+ "</div>" +
+    "</div>" +
+    "<button class='btn btn-default edit-account'>Edit Info</button>";
+
+  $('#header').text(localStorage.name + "'s Account");
+  $('.account').html(accountHTML);
 };
 
 // 
@@ -448,7 +566,7 @@ var viewItem = function (id) {
     console.log("Uh oh, this failed.");
   });
   // hide pantry div, display pantryitem div, set loading message / new header
-  $('.pantry').hide();
+  // $('.pantry').hide();
   $('.pantryitem').show();
   $('.pantryitem').html("<div class='loading-message'>Your item is loading.</div>");
 
@@ -565,16 +683,12 @@ $(document).ready(function () {
   // NAVBAR DIV
 
   $('.navbar').on('click', '.login', function () {
-    $('.pantry').hide();
-    $('.pantryitem').hide();
-    $('.expiring').hide();
+    $('.main').hide();
     displayLoginForm();
   });
 
   $('.navbar').on('click', '.signup', function () {
-    $('.pantry').hide();
-    $('.pantryitem').hide();
-    $('.expiring').hide();
+    $('.main').hide();
     displaySignupForm();
   });
 
@@ -586,27 +700,28 @@ $(document).ready(function () {
   });
 
   $('.navbar').on('click', '.curr-pantry-link', function () {
-    $('.form-holder').hide();
-    $('.pantryitem').hide();
+    $('.main').hide();
     displayPantry();
   });
   
-  $('.navbar').on('click', '.out-of-stock', function () {
-    $('.form-holder').hide();
-    $('.pantryitem').hide();
+  $('.navbar').on('click', '.out-of-stock-link', function () {
+    $('.main').hide();
     displayOutOfStock();
   });
 
   $('.navbar').on('click', '.add-item', function () {
-    $('.pantry').hide();
-    $('.pantryitem').hide();
+    $('.main').hide();
     displayItemForm();
   });
 
   $('.navbar').on('click', '.expiring-soon', function () {
-    $('.pantryitem').hide();
-    $('.form-holder').hide();
+    $('.main').hide();
     displayExpiringSoon();
+  });
+
+  $('.navbar').on('click', '.my-account', function () {
+    $('.main').hide();
+    accountDisplayRouter();
   });
 
   // FORM DIV
@@ -628,9 +743,41 @@ $(document).ready(function () {
     submitItem('edit', id);
   });
 
+  $('.form-holder').on('click', '.edit-account-button', function () {
+    var id = $(this).attr('id');
+    submitEditAccount();
+  });
+
+  // ACCOUNT DIV
+
+ $('.account').on('click', '.edit-account', function () {
+   var id = $(this).attr('id');
+   $('.main').hide();
+   displayEditAccount();
+ });
+
   // PANTRY DIV
 
   $('.pantry').on('click', '.item_name', function () {
+    var id = $(this).attr('id');
+    viewItem(id);
+  });
+
+  // EXPIRING DIV
+
+  $('.expiring').on('click', '.item_name', function () {
+    var id = $(this).attr('id');
+    viewItem(id);
+  });
+
+  $('.expiring').on('click', '.edit-account', function () {
+    var id = $(this).attr('id');
+    viewItem(id);
+  });
+
+  // OUT OF STOCK DIV
+
+  $('.out-of-stock').on('click', '.item_name', function () {
     var id = $(this).attr('id');
     viewItem(id);
   });
