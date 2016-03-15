@@ -30,7 +30,7 @@ var setNavbar = function () {
 var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
-  var date = new Date(dateString); 
+  var date = new Date(dateString);
   var day = date.getDate();
   var month = date.getMonth() + 1;
   var year = date.getFullYear();
@@ -55,6 +55,7 @@ var flashMessage = function (message) {
 
 var displaySplash = function () {
   $('.navbar').hide();
+  $('.main').hide();
   $('.splash').show();
 };
 
@@ -198,7 +199,7 @@ var submitLogin = function () {
       localStorage.token = data['token'];
       localStorage.uid = data['uid'];
       localStorage.name = data['name'];
-      localStorage.user = JSON.serialize(data);
+      localStorage.user = JSON.stringify(data);
       setNavbar();
       $('.form-holder').hide();
       displayPantry();
@@ -362,7 +363,7 @@ var displayItemTable = function (items, divClass) {
       "</tr>";
   }
   if (items.length === 0) {
-    tableHTML = "<h3>You don't have any items yet. Add some to get started.</h3>";
+    tableHTML = "<h3>Oh no! You don't have any in-stock items in your pantry.</h3>";
   } else {
     tableHTML += "</table>";
   }
@@ -663,18 +664,14 @@ $(document).ready(function () {
   // SPLASH DIV
   $('.splash').on('click', '#splash-login', function () {
     $('.background').show();
-    $('.pantry').hide();
-    $('.pantryitem').hide();
-    $('.splash').hide();
+    $('.main').hide();
     $('.navbar').show();
     displayLoginForm();
   });
 
   $('.splash').on('click', '#splash-signup', function () {
     $('.background').show();
-    $('.pantry').hide();
-    $('.pantryitem').hide();
-    $('.splash').hide();
+    $('.main').hide();
     $('.navbar').show();
     displaySignupForm();
   });
@@ -695,6 +692,7 @@ $(document).ready(function () {
   $('.navbar').on('click', '.logout', function () {
     localStorage.clear();
     $('.background').hide();
+    $('.main').hide();
     setNavbar();
     displaySplash();
   });
@@ -760,6 +758,7 @@ $(document).ready(function () {
 
   $('.pantry').on('click', '.item_name', function () {
     var id = $(this).attr('id');
+    $('.main').hide();
     viewItem(id);
   });
 
