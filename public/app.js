@@ -553,7 +553,7 @@ var displayMyAccount = function (user) {
 // 
 
 var displaySingleItem = function (id, item, ingredients) {
-  var ingHtml = "<div class='ingredients-show'>";
+  var ingHtml = "<div class='ingredients-show'> Ingredients: ";
   if (Array.isArray(ingredients)) {
     if (ingredients.length > 0) {
       for (var i = 0; i < ingredients.length -1; i++) {
