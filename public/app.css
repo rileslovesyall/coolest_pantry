@@ -127,6 +127,14 @@ a:visited {
   padding: 5px;
 }
 
+.about {
+  text-align: left;
+}
+
+.about>p {
+  margin-top: 25px;
+}
+
 #email {
   width: 65%;
   display: inline-block;

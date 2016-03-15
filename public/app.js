@@ -4,7 +4,7 @@
 
 var setNavbar = function () {
   var navbarHtml = "<ul class='nav navbar-nav'>";
-  navbarHtml += "<li><a class='labout nav-link'>About</a></li> ";
+  navbarHtml += "<li><a class='about-link nav-link'>About</a></li> ";
 
   if (localStorage.token === undefined) {
     navbarHtml += "<li><a class='login nav-link'>Login</a></li>";
@@ -63,6 +63,27 @@ var displaySplash = function () {
   $('.navbar').hide();
   $('.main').hide();
   $('.splash').show();
+};
+
+// 
+// STATIC ABOUT PAGE
+// 
+
+var displayAbout = function () {
+  var aboutHTML =
+  "<p>Do you preserve food at home? Are you comforted by rows of jars lining your pantry shelves, or filling your freezer? Do you ever lose track of what all you have in the midst of such plenty?</p>" +
+
+"<p>Welcome to Pocket Pantry. You can easily track all of your preserved goods, with their ingredients and expiration dates, get weekly reminders of what needs to be eaten soon, and see at a glance what you have available.</p>" +
+
+"<p> To get started, create a new item, including it's ingredients, and how long it takes (from the date it was made) to expire. You can include an initial quantity when you log your first item, if you have any in stock. You can set the portion sizes your item is preserved in, like 'cups,' 'pints,' 'quarts,' or whatever size you'd like. Each time you use that amount, you can log it using the 'consume' button on the item page. In the future, you'll be able to see a visualization of when you've consumed your items, giving you more data to plan your future food needs.</p>" +
+
+"<p>Whenever you make more of the same item, just use the 'add' button on the item page, and the new quantity will immediately be added to your pantry with the proper expiration date.</p>" +
+
+"<p>On the 'My Account' tab, you can edit your notification settings. By default, you will be sent a weekly e-mail listing any items expiring in the next two weeks, as well as a list of all the items in your current pantry. You're welcome to turn off these e-mails, as well as change what you deem as 'expiring soon.' (Want to see everything that expires in the next month? Just change that setting to '4 weeks' instead of the default 2!)</p>";
+
+  $('#header').text("About Pocket Pantry");
+  $('.about').show();
+  $('.about').html(aboutHTML);
 };
 
 //
@@ -366,7 +387,6 @@ var displayItemTable = function (items, divClass, showExp) {
         if (item['exp_date'] === null) {
           expDate = 'N/A';
         } else {
-          console.log("exp_date " +  item['exp_date']);
           expDate = cleanDate(item['exp_date']);
         }
       }
@@ -691,8 +711,20 @@ $(document).ready(function () {
     displaySignupForm();
   });
 
+  $('.splash').on('click', '#splash-about', function () {
+    $('.background').show();
+    $('.main').hide();
+    $('.navbar').show();
+    displayAbout();
+  });
+
 
   // NAVBAR DIV
+
+  $('.navbar').on('click', '.about-link', function () {
+    $('.main').hide();
+    displayAbout();
+  });
 
   $('.navbar').on('click', '.login', function () {
     $('.main').hide();
