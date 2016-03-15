@@ -3,22 +3,28 @@
 //
 
 var setNavbar = function () {
-  var navbarHtml = "";
+  var navbarHtml = "<ul class='nav navbar-nav'>";
+  navbarHtml += "<li><a class='labout nav-link'>About</a></li> ";
 
   if (localStorage.token === undefined) {
-    navbarHtml += "<a class='login nav-link'>Login</a> / ";
-    navbarHtml += "<a class='signup nav-link'>Sign Up</a>";
+    navbarHtml += "<li><a class='login nav-link'>Login</a></li>";
+    navbarHtml += "<li><a class='signup nav-link'>Sign Up</a></li>";
   }
 
   if (localStorage.token !== undefined) {
-    navbarHtml += "<a class='curr-pantry-link nav-link'>Current Pantry</a> / ";
-    navbarHtml += "<a class='add-item nav-link'>Add Item</a> / ";
-    navbarHtml += "<a class='expiring-soon nav-link'>Expiring Soon</a> / ";
-    navbarHtml += "<a class='out-of-stock-link nav-link'>Out of Stock</a> / ";
-    navbarHtml += "<a class='my-account nav-link'>My Account</a> / ";
-    navbarHtml += "<a class='logout nav-link'>Logout</a>";
+    navbarHtml += "<li><a class='my-account nav-link'>My Account</a></li>";
+    navbarHtml += "<li><a class='logout nav-link'>Logout</a></li>";
+    navbarHtml += "<li class='dropdown'>" +
+          "<a href='#'' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>My Pantry <span class='caret'></span></a>" +
+          "<ul class='dropdown-menu'>";
+    navbarHtml += "<li><a class='add-item nav-link'>Add Item</a></li>";
+    navbarHtml += "<li><a class='curr-pantry-link nav-link'>Current Pantry</a></li>";
+    navbarHtml += "<li><a class='expiring-soon nav-link'>Expiring Soon</a> </li>";
+    navbarHtml += "<li><a class='out-of-stock-link nav-link'>Out of Stock</a> </li>";
+    navbarHtml += "</ul>"
   }
 
+  navbarHtml += "</ul>"
   $('.navbar').html(navbarHtml);
 };
 
@@ -280,14 +286,14 @@ var displayEditAccount = function () {
           "<input class='form-control' for='email' id='email' name='email' type='email' value="+user['email']+">" +
         "</div>" +
         "<div class='form-group'>" +
-          "<label for='name'>Would you like to receive notifications when your items are expiring soon? </label>" +
+          "<label for='exp_notif'>Would you like to receive notifications when your items are expiring soon? </label>" +
           "<select class='form-control' name='exp_notif' id='exp_notif' required>" +
             "<option value='true'>Yes</option>" +
             "<option value='false'>No</option>" +
           "</select>" +
         "</div>" +
         "<div class='form-group'>" +
-          "<label for='exp_soon_days'>What Does 'Expiring Soon' Mean to You?</label>" +
+          "<label for='exp_soon_days'>What Does 'Expiring Soon' Mean to You?</label><br>" +
           "<input class='form-control'for='exp_soon_quant' id='exp_soon_quant' type='number' name='exp_soon_quant' value='2'required>" +
           "<select class='form-control' name='exp_soon_units' id='exp_soon_units' required>" +
             "<option value='days'>Day(s)</option>" +
@@ -507,7 +513,7 @@ var displayMyAccount = function (user) {
   accountHTML +=
     "<div class='account-info'>" +
       "<div class='account-name'>Name: " +user['name']+ "</div>" +
-      "<div class='account-email'><strong>Email:</strong> " +user['email']+ "</div>" +
+      "<div class='account-email'>Email: " +user['email']+ "</div>" +
       "<div class='account-exp-notif'>Expiration Notifications: "+exp+"</div>" +
       "<div class='account-exp-days'>Expiring Soon Setting: " +exp_soon+ "</div>" +
     "</div>" +
