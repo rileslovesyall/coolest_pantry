@@ -568,14 +568,16 @@ var displaySingleItem = function (id, item, ingredients) {
   var pantryitemHtml = description +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
     ingHtml +
-    "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button>" +
+    "<div class='row'><div class='col-xs-12'><button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button></div></div>" +
     "<div class='row'>";
       if (item['quantity'] > 0) {
         console.log(item['quantity']);
-        pantryitemHtml += "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>";
+        pantryitemHtml += "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +
+        "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>";
+      } else {
+        pantryitemHtml += "<div class='col-xs-12'><button class='bulk-add-btn-alone btn btn-default big-button' id="+id+">Bulk Add</button></div>";
       }
-      pantryitemHtml += "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
-    "</div>";
+    pantryitemHtml += "</div>";
   $('.pantryitem').show();
   $('.pantryitem').html(pantryitemHtml);
 };
@@ -825,7 +827,7 @@ $(document).ready(function () {
     displayItemForm(id);
   });
 
-  $('.pantryitem').on('click', '.bulk-add-btn', function () {
+  $('.pantryitem').on('click', '.bulk-add-btn, .bulk-add-btn-alone', function () {
     var id = $(this).attr('id');
     displayBulkQuant(id, 'Add');
   });

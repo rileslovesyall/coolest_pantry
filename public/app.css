@@ -249,17 +249,20 @@ th {
 
 .sm-button {
   margin-top: 25px;
-  margin-right: 10px;
   height: 40px;
   font-size: 18px;
 }
 
 .big-button {
   margin-top: 20px;
-  width: 75%;
-  height: 10%;
+  width: 130px;
+  height: 55px;
   padding: 10px;
   font-size: 24px;
+}
+
+.edit-btn {
+  margin-bottom: 10px;
 }
 
 .consume {
@@ -267,11 +270,11 @@ th {
 }
 
 .bulk-add-btn {
-  margin-right: 40%;
+  margin-right: 30%;
 }
 
 .bulk-add-btn-alone {
-
+  margin: 0 auto;
 }
 
 .bulk-quant-submit {
