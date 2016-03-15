@@ -447,7 +447,7 @@ var displayExpiringSoon = function () {
     success: function (data) {
       console.log(data);
       if (data.length === 0) {
-        expHtml = "You've got nothing expiring soon. Hooray!";
+        $('.expiring').html("You've got nothing expiring soon. Hooray!")
       } else {
         displayItemTable(data, '.expiring', true);
       }
@@ -569,9 +569,12 @@ var displaySingleItem = function (id, item, ingredients) {
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
     ingHtml +
     "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button>" +
-    "<div class='row'>" +
-      "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +
-      "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
+    "<div class='row'>";
+      if (item['quantity'] > 0) {
+        console.log(item['quantity']);
+        pantryitemHtml += "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>";
+      }
+      pantryitemHtml += "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
   $('.pantryitem').show();
   $('.pantryitem').html(pantryitemHtml);
@@ -801,25 +804,9 @@ $(document).ready(function () {
    displayEditAccount();
  });
 
-  // PANTRY DIV
+// CLICKS TO VIEW ITEM
 
-  $('.pantry').on('click', '.item_name', function () {
-    var id = $(this).attr('id');
-    $('.main').hide();
-    viewItem(id);
-  });
-
-  // EXPIRING DIV
-
-  $('.expiring').on('click', '.item_name', function () {
-    var id = $(this).attr('id');
-    $('.main').hide();
-    viewItem(id);
-  });
-
-  // OUT OF STOCK DIV
-
-  $('.out-of-stock').on('click', '.item_name', function () {
+  $('.expiring').add('.pantry').add('.out-of-stock').on('click', '.item_name', function () {
     var id = $(this).attr('id');
     $('.main').hide();
     viewItem(id);
