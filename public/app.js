@@ -30,13 +30,10 @@ var setNavbar = function () {
 var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
-  console.log(dateString);
   var myDateArray = dateString.split("-");
-  var date = new Date(myDateArray[0],myDateArray[1]-1,myDateArray[2]); 
-  console.log(date);
-  var day = date.getDate();
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
+  var day = myDateArray[2];
+  var month = myDateArray[1];
+  var year = myDateArray[0];
   return month + '/' + day + '/' + year;
 };
 
