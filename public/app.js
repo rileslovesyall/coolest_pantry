@@ -438,16 +438,16 @@ var loadPantryAPI = function () {
 
 var displayExpiringSoon = function () {
   $('.expiring').show();
-  var uid = localStorage.uid;
+  $('.expiring').text("Loading your items.");
   $('#header').text('Expiring Soon');
   $.ajax({
     type: "GET",
-    url: baseURL + "/api/v1/users/" + uid + "/expiring_soon",
+    url: baseURL + "/api/v1/users/" + localStorage.uid + "/expiring_soon",
     headers: {'Authorization': localStorage.token},
     success: function (data) {
       console.log(data);
       if (data.length === 0) {
-        $('.expiring').html("You've got nothing expiring soon. Hooray!")
+        $('.expiring').html("You've got nothing expiring soon. Hooray!");
       } else {
         displayItemTable(data, '.expiring', true);
       }
@@ -460,11 +460,11 @@ var displayExpiringSoon = function () {
 
 var displayOutOfStock = function () {
   $('.out-of-stock').show();
-  var uid = localStorage.uid;
+  $('out-of-stock').text("Loading your items.");
   $('#header').text('Out of Stock Items');
   $.ajax({
     type: "GET",
-    url: baseURL + "/api/v1/users/" + uid + "/out-of-stock",
+    url: baseURL + "/api/v1/users/" + localStorage.uid + "/out-of-stock",
     headers: {'Authorization': localStorage.token},
     success: function (data) {
       var length = data['pantry_items'].length;
