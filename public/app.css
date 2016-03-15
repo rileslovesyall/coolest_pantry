@@ -7,10 +7,8 @@ body {
 }
 
 .navbar {
-  margin-top: 8px;
   padding-top: 8px;
   padding-bottom: 5px;
-  margin-bottom: 0;
   border-bottom: 1px solid #BDBDBD;
   font-size: 16px;
   color: #FAFAFA;
@@ -105,7 +103,7 @@ body {
 .content-content {
   position: relative;
   z-index: 5;
-  padding: 20px
+  padding: 0 20px 20px;
 }
 
 a {
@@ -311,7 +309,6 @@ th {
 }
 
 footer {
-  margin-top: 30px;
   text-align: center;
   font-size: 14px;
 }
