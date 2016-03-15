@@ -95,9 +95,9 @@ body {
   background-color: #454545;
   z-index: 1;
    These three lines are for transparency in all browsers. 
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-  filter: alpha(opacity=4 0);
-  opacity: .4;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  filter: alpha(opacity=50);
+  opacity: .5;
 }
 
 .content-content {
@@ -271,7 +271,7 @@ th {
 }
 
 .bulk-add-btn-alone {
-  
+
 }
 
 .bulk-quant-submit {
