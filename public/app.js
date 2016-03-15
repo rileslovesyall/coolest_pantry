@@ -21,10 +21,10 @@ var setNavbar = function () {
     navbarHtml += "<li><a class='curr-pantry-link nav-link'>Current Pantry</a></li>";
     navbarHtml += "<li><a class='expiring-soon nav-link'>Expiring Soon</a> </li>";
     navbarHtml += "<li><a class='out-of-stock-link nav-link'>Out of Stock</a> </li>";
-    navbarHtml += "</ul>"
+    navbarHtml += "</ul>";
   }
 
-  navbarHtml += "</ul>"
+  navbarHtml += "</ul>";
   $('.navbar').html(navbarHtml);
 };
 
