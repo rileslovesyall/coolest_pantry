@@ -26,11 +26,14 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "https://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
-  var date = new Date(dateString);
+  console.log(dateString);
+  var myDateArray = dateString.split("-");
+  var date = new Date(myDateArray[0],myDateArray[1]-1,myDateArray[2]); 
+  console.log(date);
   var day = date.getDate();
   var month = date.getMonth() + 1;
   var year = date.getFullYear();
@@ -343,28 +346,37 @@ var displayPantry = function () {
   loadPantryAPI();
 };
 
-var displayItemTable = function (items, divClass) {
+var displayItemTable = function (items, divClass, showExp) {
   var tableHTML = "";
-  tableHTML += "<table class='table table-responsive' id='pantry-table'><th>item</th><th>portion size</th>" +
-  "<th>quantity</th>";
-  for (i=0; i<items.length;i++) {
-    var item = items[i];
-    var expDate;
-    if (item['expiration_date'] === null) {
-      expDate = 'N/A';
-    } else {
-      expDate = cleanDate(item['expiration_date']);
-    }
-    tableHTML +=
-      "<tr>" +
-        "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
-        "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
-        "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>" +
-      "</tr>";
-  }
   if (items.length === 0) {
     tableHTML = "<h3>Oh no! You don't have any in-stock items in your pantry.</h3>";
   } else {
+    tableHTML += "<table class='table table-responsive' id='pantry-table'><th>item</th><th>portion size</th>" +
+    "<th>quantity</th>";
+    if (showExp) {
+      tableHTML += "<th>expiration date</th>";
+    }
+    for (i=0; i<items.length;i++) {
+      var item = items[i];
+      if (showExp) {
+        var expDate;
+        if (item['exp_date'] === null) {
+          expDate = 'N/A';
+        } else {
+          console.log("exp_date " +  item['exp_date']);
+          expDate = cleanDate(item['exp_date']);
+        }
+      }
+      tableHTML +=
+        "<tr>" +
+          "<td class='item_name td-not-button' id="+item['id']+">" + "<a>"+item["name"]+'</a>' + "</td>" +
+          "<td class='portion-size td-not-button' id="+item['id']+">" + item["portion"] + "</td>" +
+          "<td class='quantity td-not-button' id="+item['id']+">" + item["quantity"] + "</td>";
+        if (showExp) {
+          tableHTML += "<td class='exp td-not-button' id="+item['id']+">" + expDate + "</td>";
+        }
+      tableHTML += "</tr>";
+    }
     tableHTML += "</table>";
   }
   $(divClass).html(tableHTML);
@@ -414,7 +426,7 @@ var displayExpiringSoon = function () {
       if (data.length === 0) {
         expHtml = "You've got nothing expiring soon. Hooray!";
       } else {
-        displayItemTable(data, '.expiring');
+        displayItemTable(data, '.expiring', true);
       }
     }
   })
@@ -453,7 +465,6 @@ var displayOutOfStock = function () {
     flashMessage('Something went wrong. Please try again.');
   });
   if (localStorage.getItem('outOfStock')) {
-    console.log(localStorage.getItem('outOfStock'));
     displayItemTable(JSON.parse(localStorage.getItem('outOfStock')), '.out-of-stock');
   }
 };
@@ -539,6 +550,7 @@ var displaySingleItem = function (id, item, ingredients) {
       "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +
       "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>" +
     "</div>";
+  $('.pantryitem').show();
   $('.pantryitem').html(pantryitemHtml);
 };
 
@@ -626,7 +638,7 @@ var displayBulkQuant = function (id, action) {
     "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>" +
     "<button class='btn btn-default bulk-quant-submit' id='"+id+"'>"+action+"</button>" +
    "</div>";
-
+   $('.add-consume').show();
   $('.add-consume').html(addHtml);
 };
 
@@ -766,11 +778,7 @@ $(document).ready(function () {
 
   $('.expiring').on('click', '.item_name', function () {
     var id = $(this).attr('id');
-    viewItem(id);
-  });
-
-  $('.expiring').on('click', '.edit-account', function () {
-    var id = $(this).attr('id');
+    $('.main').hide();
     viewItem(id);
   });
 
@@ -778,6 +786,7 @@ $(document).ready(function () {
 
   $('.out-of-stock').on('click', '.item_name', function () {
     var id = $(this).attr('id');
+    $('.main').hide();
     viewItem(id);
   });
 
