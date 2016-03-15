@@ -32,8 +32,8 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "https://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var myDateArray = dateString.split("-");
@@ -321,8 +321,11 @@ var displayEditAccount = function () {
             "<option value='weeks' selected='selected'>Week(s)</option>" +
           "</select>" +
         "</div>" +
-        "<div class='form-group'>" +
       "</fieldset>" +
+      "<div class='form-group'>" +
+        "<label for='password'>Password: <div class='form-note'>required</div></label>" +
+        "<input class='form-control' for='password' id='password' type='password' name='password' required>" +
+      "</div>" +
       "<button class='btn btn-default edit-account-button'>Submit</button>" +
     "</form>";
 
@@ -339,7 +342,6 @@ var submitEditAccount = function () {
     data: $('.edit-account-form').serialize()
   })
   .done(function (data) {
-    console.log(data);
     if (data['errors'] !== undefined) {
       flashMessage("We're sorry. Something went wrong with your update.");
     } else if (data['message'] === "Sorry, this request can not be authenticated. Try again.") {
@@ -349,8 +351,12 @@ var submitEditAccount = function () {
     }
   })
   .fail(function (data) {
-    console.log(data);
-    flashMessage("Something went wrong. Please try again soon.");
+    var response = JSON.parse(data.responseText);
+    if (response !== undefined) {
+      flashMessage(response['error']);
+    } else {
+      flashMessage("Something went wrong. Please try again soon.");
+    }
   });
   $('.form-holder').hide();
   accountDisplayRouter();
@@ -506,7 +512,6 @@ var accountDisplayRouter = function () {
     url: baseURL + '/api/v1/users/' + localStorage.uid,
     headers: {'Authorization': localStorage.token},
     success: function (data) {
-      console.log(data);
       displayMyAccount(data);
       localStorage.user = JSON.stringify(data);
     }
@@ -571,7 +576,6 @@ var displaySingleItem = function (id, item, ingredients) {
     "<div class='row'><div class='col-xs-12'><button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button></div></div>" +
     "<div class='row'>";
       if (item['quantity'] > 0) {
-        console.log(item['quantity']);
         pantryitemHtml += "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +
         "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>";
       } else {
