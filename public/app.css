@@ -114,6 +114,11 @@ body {
   padding: 0 20px 20px;
 }
 
+.divider {
+  margin-top: 35px;
+  border-bottom: 1px solid #BDBDBD;
+}
+
 a {
   color: #FAFAFA;
 }
@@ -122,15 +127,12 @@ a:visited {
   color: #FAFAFA;
 }
 
+.header,
 #header {
   font-family: 'Homemade Apple', cursive;
   text-align: center;
   padding-bottom: 18px;
   padding-top: 15px;
-}
-
-.navbar {
-  padding: 5px;
 }
 
 .about {
@@ -139,6 +141,17 @@ a:visited {
 
 .about>p {
   margin-top: 25px;
+}
+
+.about-small {
+  font-size: 16px;
+}
+
+.about-header-section {
+  border-top: 1px solid #BDBDBD;
+  border-bottom: 1px solid #BDBDBD;
+  padding: 25px 0;
+  text-align: center;
 }
 
 #email {
