@@ -603,19 +603,24 @@ var displaySingleItem = function (id, item, ingredients) {
   var pantryitemHtml = description +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
     ingHtml +
-    "<div class='row'><div class='col-xs-12'>" +
-      "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button>" +
-      "<button class='copy-btn btn btn-default sm-button' id="+id+"> Copy Item </button>" +
-      "<button class='delete-btn btn btn-default sm-button' id="+id+"> Delete Item </button>" +
-    "</div></div>" +
     "<div class='row'>";
       if (item['quantity'] > 0) {
-        pantryitemHtml += "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +
-        "<div class='col-xs-6'><button class='bulk-add-btn btn btn-default big-button' id="+id+">Bulk Add</button></div>";
+        pantryitemHtml += "<div class='col-xs-12'>" +
+          "<button class='consume btn btn-default big-button' id="+id+"> Consume </button>" +
+          "<button class='bulk-add-btn btn btn-default big-button' id="+id+"> Add </button>" +
+        "</div>";
       } else {
         pantryitemHtml += "<div class='col-xs-12'><button class='bulk-add-btn-alone btn btn-default big-button' id="+id+">Bulk Add</button></div>";
       }
-    pantryitemHtml += "</div>";
+    pantryitemHtml += "</div>" +
+    "<div class='row'><div class='col-xs-12'>" +
+      "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit </button>" +
+      "<button class='copy-btn btn btn-default sm-button' id="+id+"> Copy </button>" +
+      "<button class='delete-btn btn btn-default sm-button' id="+id+"> Delete </button>" +
+    "</div></div>" +
+    "<div class='row'><div class='col-xs-12'>" +
+      "<button class='curr-pantry-link btn btn-default sm-button' id="+id+"> Back to Pantry </button>" +
+    "</div></div>";
   $('.pantryitem').show();
   $('.pantryitem').html(pantryitemHtml);
 };
@@ -815,7 +820,7 @@ $(document).ready(function () {
     displaySplash();
   });
 
-  $('.navbar').on('click', '.curr-pantry-link', function () {
+  $('.navbar').add('.pantryitem').on('click', '.curr-pantry-link', function () {
     $('.main').hide();
     displayPantry();
   });

@@ -273,25 +273,17 @@ th {
 }
 
 .sm-button {
-  margin: 25px 5px 10px;
+  margin: 15px 5px 10px;
   height: 40px;
   font-size: 18px;
 }
 
 .big-button {
-  margin-top: 20px;
+  margin: 20px 10px 10px;
   width: 130px;
   height: 55px;
   padding: 10px;
   font-size: 24px;
-}
-
-.consume {
-  margin-left: 30%;
-}
-
-.bulk-add-btn {
-  margin-right: 30%;
 }
 
 .bulk-add-btn-alone {
