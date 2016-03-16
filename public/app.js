@@ -72,7 +72,7 @@ var displaySplash = function () {
 
 var displayAbout = function () {
   var aboutHTML =
-  "<p class='about-small'>Do you preserve food at home? Are you comforted by rows of jars lining your pantry shelves or filling your freezer? Do you ever lose track of what all you have in the midst of such plenty?</p>" +
+  "<p class='about-small'>Do you preserve food at home? Are you comforted by rows of jars lining your pantry shelves or filling your freezer? Do you ever lose track of what you have in the midst of such plenty?</p>" +
 
 "<h2 class='about-header-section'>Welcome to Pocket Pantry. Easily track your preserved goods with their ingredients and expiration dates, get weekly reminders of what needs to be eaten soon, & see at a glance what's available.</h2>" +
 
@@ -393,7 +393,7 @@ var displayPantry = function () {
 var displayItemTable = function (items, divClass, showExp) {
   var tableHTML = "";
   if (items.length === 0) {
-    tableHTML = "<h3>Oh no! You don't have any in-stock items in your pantry.</h3>";
+    tableHTML = "<h3>You don't have any items in your pantry.</h3><p class='pantry-p'>Click 'Add Item' under the 'My Pantry' tab to add a new item to your pantry, or browse your out of stock items in the 'Out-of-Stock' tab.</p>";
   } else {
     tableHTML += "<table class='table table-responsive' id='pantry-table'><th>item</th><th>portion size</th>" +
     "<th>quantity</th>";
@@ -619,7 +619,7 @@ var displaySingleItem = function (id, item, ingredients) {
       } else {
         pantryitemHtml += "<div class='col-xs-12'><button class='bulk-add-btn-alone btn btn-default big-button' id="+id+">Bulk Add</button></div>";
       }
-    pantryitemHtml += "</div>" +
+    var buttonsHtml = "</div>" +
     "<div class='row'><div class='col-xs-12'>" +
       "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit </button>" +
       "<button class='copy-btn btn btn-default sm-button' id="+id+"> Copy </button>" +
@@ -630,6 +630,8 @@ var displaySingleItem = function (id, item, ingredients) {
     "</div></div>";
   $('.pantryitem').show();
   $('.pantryitem').html(pantryitemHtml);
+  $('.item-buttons').show();2
+  $('.item-buttons').html(buttonsHtml);
 };
 
 var viewItem = function (id) {
@@ -712,11 +714,11 @@ var displayBulkQuant = function (id, action) {
   event.preventDefault();
   var addHtml = "";
   addHtml += "<div class='form-group bulk-quant-form'>" +
-    "<label for='quantity'>Quantity: </label> " +
-    "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>" +
-    "<button class='btn btn-default bulk-quant-submit' id='"+id+"'>"+action+"</button>" +
-   "</div>";
-   $('.add-consume').show();
+      "<label for='quantity'>Quantity: </label> " +
+      "<input class='form-control' for='add-quantity' id='add-quantity' type='number' name='add-quantity' required'>" +
+      "<button class='btn btn-default bulk-quant-submit' id='"+id+"'>"+action+"</button>" +
+    "</div>";
+  $('.add-consume').show();
   $('.add-consume').html(addHtml);
 };
 
@@ -900,20 +902,16 @@ $(document).ready(function () {
     viewItem(id);
   });
 
-  // PANTRYITEM SHOW DIV
+  // ITEM BUTTONS
 
-  $('.pantryitem').on('click', '.add', function() {
-    var id = $(this).attr('id');
-    addConsumeItem(id, 'add', 1);
-  });
 
-  $('.pantryitem').on('click', '.edit-btn', function () {
+  $('.item-buttons').on('click', '.edit-btn', function () {
     var id = $(this).attr('id');
     $('.main').hide();
     displayItemForm(id);
   });
 
-  $('.pantryitem').on('click', '.delete-btn', function () {
+  $('.item-buttons').on('click', '.delete-btn', function () {
     if (confirm("Are you sure you want to delete this item?")) {
       var id = $(this).attr('id');
       $('.main').hide();
@@ -921,10 +919,17 @@ $(document).ready(function () {
     }
   });
 
-  $('.pantryitem').on('click', '.copy-btn', function () {
+  $('.item-buttons').on('click', '.copy-btn', function () {
     var id = $(this).attr('id');
     $('.main').hide();
     copyItem(id);
+  });
+
+  // PANTRYITEM SHOW DIV
+
+  $('.pantryitem').on('click', '.add', function() {
+    var id = $(this).attr('id');
+    addConsumeItem(id, 'add', 1);
   });
 
   $('.pantryitem').on('click', '.bulk-add-btn, .bulk-add-btn-alone', function () {
@@ -942,7 +947,8 @@ $(document).ready(function () {
   $('.add-consume').on('click', '.bulk-quant-submit', function() {
     event.preventDefault();
     var id = $(this).attr('id');
-    var quant = $('#quantity').val();
+    var quant = $('#add-quantity').val();
+    console.log(quant);
     var action = $('.bulk-quant-submit').text().toLowerCase();
     addConsumeItem(id, action, quant);
     $('.bulk-quant-form').hide();
