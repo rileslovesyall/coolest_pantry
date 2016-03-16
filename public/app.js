@@ -685,6 +685,33 @@ var displayBulkQuant = function (id, action) {
   $('.add-consume').html(addHtml);
 };
 
+var deleteItem = function (id) {
+  event.preventDefault();
+  $.ajax({
+    type: 'DELETE',
+    url: baseURL + '/api/v1/pantryitems/' + id,
+    headers: {'Authorization': localStorage.token},
+    success: function (data) {
+      console.log(data);
+      var currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
+      localStorage.removeItem('pantryitem' + id);
+      flashMessage(currItem['name'] + " has been deleted.");
+      $('.main').hide();
+      displayPantry();
+    }
+  })
+  .fail(function (data) {
+    console.log(data);
+    flashMessage("Uh Oh. Something went wrong. Please try again later.");
+    $('.main').hide();
+    displayPantry();
+  });
+};
+
+var copyItem = function () {
+  event.preventDefault();
+};
+
 // 
 // 
 // 
