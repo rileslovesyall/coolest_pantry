@@ -72,7 +72,7 @@ var displaySplash = function () {
 
 var displayAbout = function () {
   var aboutHTML =
-  "<p class='about-small'>Do you preserve food at home? Are you comforted by rows of jars lining your pantry shelves, or filling your freezer? Do you ever lose track of what all you have in the midst of such plenty?</p>" +
+  "<p class='about-small'>Do you preserve food at home? Are you comforted by rows of jars lining your pantry shelves or filling your freezer? Do you ever lose track of what all you have in the midst of such plenty?</p>" +
 
 "<h2 class='about-header-section'>Welcome to Pocket Pantry. Easily track your preserved goods with their ingredients and expiration dates, get weekly reminders of what needs to be eaten soon, & see at a glance what's available.</h2>" +
 
@@ -285,7 +285,7 @@ var submitSignup = function () {
       localStorage.token = data['user']['api_token'];
       localStorage.uid = data['user']['id'];
       localStorage.name = data['user']['name'];
-      localStorage.user = JSON.serialize(data);
+      localStorage.user = JSON.stringify(data);
       $('.form-holder').hide();
       setNavbar();
       displayPantry();
@@ -580,7 +580,11 @@ var displaySingleItem = function (id, item, ingredients) {
   var pantryitemHtml = description +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
     ingHtml +
-    "<div class='row'><div class='col-xs-12'><button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button></div></div>" +
+    "<div class='row'><div class='col-xs-12'>" +
+      "<button class='edit-btn btn btn-default sm-button' id="+id+"> Edit Item </button>" +
+      "<button class='copy-btn btn btn-default sm-button' id="+id+"> Copy Item </button>" +
+      "<button class='delete-btn btn btn-default sm-button' id="+id+"> Delete Item </button>" +
+    "</div></div>" +
     "<div class='row'>";
       if (item['quantity'] > 0) {
         pantryitemHtml += "<div class='col-xs-6'><button class='consume btn btn-default big-button' id="+id+">Consume</button></div>" +

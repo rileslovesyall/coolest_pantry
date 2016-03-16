@@ -273,7 +273,7 @@ th {
 }
 
 .sm-button {
-  margin-top: 25px;
+  margin: 25px 5px 10px;
   height: 40px;
   font-size: 18px;
 }
@@ -284,10 +284,6 @@ th {
   height: 55px;
   padding: 10px;
   font-size: 24px;
-}
-
-.edit-btn {
-  margin-bottom: 10px;
 }
 
 .consume {
