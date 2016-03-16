@@ -549,10 +549,33 @@ var displayMyAccount = function (user) {
       "<div class='account-exp-notif'>Expiration Notifications: "+exp+"</div>" +
       "<div class='account-exp-days'>Expiring Soon Setting: " +exp_soon+ "</div>" +
     "</div>" +
-    "<button class='btn btn-default edit-account'>Edit Info</button>";
+    "<div class='row'><div class='col-xs-12'>" +
+      "<button class='btn btn-default acct-btn edit-account'>Edit Info</button>" +
+      "<button class='btn btn-default acct-btn delete-account'>Delete Account</button>" +
+    "</div></div>";
 
   $('#header').text(localStorage.name + "'s Account");
   $('.account').html(accountHTML);
+};
+
+var deleteAccount = function () {
+  $.ajax({
+    type: 'DELETE',
+    url: baseURL + '/api/v1/users/' + localStorage.uid,
+    headers: {'Authorization': localStorage.token},
+    success: function(data) {
+      console.log(data);
+      flashMessage("Your account has been deleted.");
+      localStorage.clear();
+      $('.main').hide();
+      setNavbar();
+      displaySignupForm();
+    }
+  })
+  .fail(function(data) {
+    console.log(data);
+    flashMessage("Uh oh, something went wrong. Please try again.");
+  });
 };
 
 // 
@@ -710,6 +733,7 @@ var deleteItem = function (id) {
 
 var copyItem = function () {
   event.preventDefault();
+
 };
 
 // 
@@ -849,9 +873,10 @@ $(document).ready(function () {
  });
 
  $('.account').on('click', '.delete-account', function () {
-   var id = $(this).attr('id');
-   $('.main').hide();
-   displayDeleteAccount();
+   if (confirm("Are you sure you want to delete your account?")) {
+    $('.main').hide();
+    deleteAccount();
+   }
  });
 
 // CLICKS TO VIEW ITEM
@@ -876,9 +901,11 @@ $(document).ready(function () {
   });
 
   $('.pantryitem').on('click', '.delete-btn', function () {
-    var id = $(this).attr('id');
-    $('.main').hide();
-    deleteItem(id);
+    if (confirm("Are you sure you want to delete this item?")) {
+      var id = $(this).attr('id');
+      $('.main').hide();
+      deleteItem(id);
+    }
   });
 
   $('.pantryitem').on('click', '.copy-btn', function () {

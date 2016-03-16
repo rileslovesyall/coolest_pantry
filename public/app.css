@@ -317,8 +317,8 @@ th {
   margin: 5px;
 }
 
-.edit-account {
-  margin-top: 15px;
+.acct-btn {
+  margin: 15px 10px 0;
 }
 
 #exp_notif {
