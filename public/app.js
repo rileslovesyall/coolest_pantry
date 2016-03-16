@@ -17,7 +17,7 @@ var setNavbar = function () {
     navbarHtml += "<li class='dropdown'>" +
       "<a href='#'' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>My Pantry <span class='caret'></span></a>" +
       "<ul class='dropdown-menu'>";
-    navbarHtml += "<li><a class='add-item nav-link'>Add Item</a></li>";
+    navbarHtml += "<li><a class='new-item nav-link'>Add Item</a></li>";
     navbarHtml += "<li><a class='curr-pantry-link nav-link'>Current Pantry</a></li>";
     navbarHtml += "<li><a class='expiring-soon nav-link'>Expiring Soon</a> </li>";
     navbarHtml += "<li><a class='out-of-stock-link nav-link'>Out of Stock</a> </li>";
@@ -104,12 +104,22 @@ var dirty = function(str) {
   return str.replace('&#39;', '\'');
 };
 
-var displayItemForm = function (id) {
+var displayItemForm = function (id, newName) {
   var item = JSON.parse(localStorage.getItem('pantryitem' + id));
   var ingredients = localStorage.getItem('ingredients' + id);
   var name, description, portion, quantity, submitClass, formClass, headerText;
   if (item !== null) {
-    name = clean(item['name']);
+    if (newName) {
+      name = clean(newName);
+      submitClass = 'new-item';
+      formClass = 'add-form';
+      headerText = 'Copy Item';
+    } else {
+      name = clean(item['name']);
+      submitClass = 'edit-item';
+      formClass = 'edit-form';
+      headerText = 'Edit Item';
+    }
     if (item['description'] === undefined) {
       description = '';
     } else {
@@ -117,16 +127,13 @@ var displayItemForm = function (id) {
     }
     portion = item['portion'];
     quantity = item['quantity'];
-    submitClass = 'edit-item';
-    formClass = 'edit-form';
-    headerText = 'Edit Item';
   } else {
     name = '';
     description = '';
     portion = '';
     quantity = '';
     ingredients = '';
-    submitClass = 'add-item';
+    submitClass = 'new-item';
     formClass = 'add-form';
     headerText = 'Add Item';
   }
@@ -175,6 +182,16 @@ var displayItemForm = function (id) {
   $('#header').text(headerText);
 };
 
+var submitItem = function (type, id) {
+  var token = localStorage.getItem('token');
+  event.preventDefault();
+  if (type === 'add') {
+    postForm('/api/v1/pantryitems', '.add-form');
+  } else if (type === 'edit') {
+    postForm('/api/v1/pantryitems/'+ id, '.edit-form');
+  }
+};
+
 var postForm = function(path, form) {
   var token = localStorage.token;
   $.ajax({
@@ -191,16 +208,6 @@ var postForm = function(path, form) {
     console.log(data);
     flashMessage('Uh oh, this failed. Please try again.');
   });
-};
-
-var submitItem = function (type, id) {
-  var token = localStorage.getItem('token');
-  event.preventDefault();
-  if (type === 'add') {
-    postForm('/api/v1/pantryitems', '.add-form');
-  } else if (type === 'edit') {
-    postForm('/api/v1/pantryitems/'+ id, '.edit-form');
-  }
 };
 
 var displayLoginForm = function () {
@@ -736,9 +743,10 @@ var deleteItem = function (id) {
   });
 };
 
-var copyItem = function () {
+var copyItem = function (id) {
   event.preventDefault();
-
+  currItem = JSON.parse(localStorage.getItem('pantryitem' + id));
+  displayItemForm(id, currItem['name'] + '(copy)');
 };
 
 // 
@@ -830,7 +838,7 @@ $(document).ready(function () {
     displayOutOfStock();
   });
 
-  $('.navbar').on('click', '.add-item', function () {
+  $('.navbar').on('click', '.new-item', function () {
     $('.main').hide();
     displayItemForm();
   });
@@ -855,7 +863,7 @@ $(document).ready(function () {
     submitSignup();
   });
 
-  $('.form-holder').on('click', '.add-item', function () {
+  $('.form-holder').on('click', '.new-item', function () {
     submitItem('add');
   });
 
