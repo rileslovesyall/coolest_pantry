@@ -15,8 +15,8 @@ var setNavbar = function () {
     navbarHtml += "<li><a class='my-account nav-link'>My Account</a></li>";
     navbarHtml += "<li><a class='logout nav-link'>Logout</a></li>";
     navbarHtml += "<li class='dropdown'>" +
-          "<a href='#'' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>My Pantry <span class='caret'></span></a>" +
-          "<ul class='dropdown-menu'>";
+      "<a href='#'' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>My Pantry <span class='caret'></span></a>" +
+      "<ul class='dropdown-menu'>";
     navbarHtml += "<li><a class='add-item nav-link'>Add Item</a></li>";
     navbarHtml += "<li><a class='curr-pantry-link nav-link'>Current Pantry</a></li>";
     navbarHtml += "<li><a class='expiring-soon nav-link'>Expiring Soon</a> </li>";
@@ -37,9 +37,10 @@ var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var myDateArray = dateString.split("-");
-  var day = myDateArray[2];
-  var month = myDateArray[1];
-  var year = myDateArray[0];
+  var date = new Date(myDateArray);
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
   return month + '/' + day + '/' + year;
 };
 
