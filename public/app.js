@@ -821,6 +821,12 @@ $(document).ready(function () {
    displayEditAccount();
  });
 
+ $('.account').on('click', '.delete-account', function () {
+   var id = $(this).attr('id');
+   $('.main').hide();
+   displayDeleteAccount();
+ });
+
 // CLICKS TO VIEW ITEM
 
   $('.expiring').add('.pantry').add('.out-of-stock').on('click', '.item_name', function () {
@@ -838,8 +844,20 @@ $(document).ready(function () {
 
   $('.pantryitem').on('click', '.edit-btn', function () {
     var id = $(this).attr('id');
-    $('.pantryitem').hide();
+    $('.main').hide();
     displayItemForm(id);
+  });
+
+  $('.pantryitem').on('click', '.delete-btn', function () {
+    var id = $(this).attr('id');
+    $('.main').hide();
+    deleteItem(id);
+  });
+
+  $('.pantryitem').on('click', '.copy-btn', function () {
+    var id = $(this).attr('id');
+    $('.main').hide();
+    copyItem(id);
   });
 
   $('.pantryitem').on('click', '.bulk-add-btn, .bulk-add-btn-alone', function () {
