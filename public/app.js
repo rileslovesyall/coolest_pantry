@@ -352,6 +352,7 @@ var submitEditAccount = function () {
       flashMessage("We're sorry. Something went wrong with your update.");
     } else {
       flashMessage("Your account has been updated.");
+      localStorage.user = JSON.stringify(data['user']);display
     }
   })
   .fail(function (data) {
@@ -371,10 +372,11 @@ var submitEditAccount = function () {
 // 
 
 var displayPantry = function () {
+  var user = JSON.parse(localStorage.user);
   $('.main').hide();
   $('.pantry').show();
   $('.pantry').html("<div class='loading-message'>Hold tight. Your pantry is loading.</div>");
-  $('#header').text(localStorage.getItem('name') + "'s Pantry");
+  $('#header').text(user['name'] + "'s Pantry");
   if (localStorage.getItem('currentPantry')) {
     loadPantryLocalStorage();
   }
