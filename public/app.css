@@ -137,6 +137,7 @@ a:visited {
 
 .about {
   text-align: left;
+  font-size: 24px;
 }
 
 .about>p {
@@ -240,7 +241,8 @@ th {
   margin-left: 10px;
 }
 
-#quantity {
+#quantity,
+#add-quantity {
   width: 12%;
   display: inline-block;
 }
