@@ -304,6 +304,11 @@ th {
   margin-top: 20px;
 }
 
+.form-small {
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
 .account-info {
   text-align: left;
   font-size: 22px;

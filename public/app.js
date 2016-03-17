@@ -130,7 +130,7 @@ var displayItemForm = function (id, newName) {
     "<form class='"+formClass+"'>" +
       "<fieldset class='form-group'>" +
         "<div class='form-group'>" +
-          "<label for='name'> Item Name: </label>" +
+          "<label for='name'>*Item Name: </label>" +
           "<input class='form-control' for='name' id='name' type='text' name='name' required value='"+name+"'>" +
         "</div>" +
         "<div class='form-group'>" +
@@ -138,17 +138,17 @@ var displayItemForm = function (id, newName) {
           "<textarea class='form-control for='description' id='description' name='description'>"+description+"</textarea>" +
         "</div>" +
         "<div class='form-group'>" +
-          "<label for='portion'>Portion Size: </label>" +
+          "<label for='portion'>*Portion Size: </label>" +
           "<div class='form-note'>(i.e. Gallon, Quart, Pint, Cup etc.)</div>" +
           "<input class='form-control' name = 'portion' for='portion' id='portion' required value='"+portion+"'>" +
         "</div>";
         if (formClass === 'add-form') {
           formHtml += "<div class='form-group'>" +
-            "<label for='quantity'>Quantity: </label> " +
+            "<label for='quantity'>*Quantity: </label> " +
             "<input class='form-control' for='quantity' id='quantity' type='number' name='quantity' required'>" +
            "</div>";
           formHtml += "<div class='form-group'>" +
-            "<label for='time-to-exp'>Time Until Expiration:</label>" +
+            "<label for='time-to-exp'>*Time Until Expiration:</label>" +
             "<input class='form-control'for='time-to-exp' id='time-to-exp' type='number' name='time-to-exp' required>" +
             "<select class='form-control' name='exp-unit' id='exp-unit' required>" +
               "<option value='days'>Day(s)</option>" +
@@ -164,6 +164,7 @@ var displayItemForm = function (id, newName) {
           "<textarea class='form-control' for='ingredients' id='ingredients'  name='ingredients'>"+ingredients+"</textarea>" +
          "</div>" +
       "</fieldset>" +
+      "<div class='form-small'>* - required field</div>" +
       "<button class='"+submitClass+" btn btn-default' id='"+id+"'>Submit</button>" +
     "</form>";
   $('.form-holder').show();
