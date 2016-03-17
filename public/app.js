@@ -71,16 +71,6 @@ var displaySplash = function () {
 // 
 
 var displayAbout = function () {
-  var aboutHTML =
-  "<p class='about-small'>Do you preserve food at home? Are you comforted by rows of jars lining your pantry shelves or filling your freezer? Do you ever lose track of what you have in the midst of such plenty?</p>" +
-
-"<h2 class='about-header-section'>Welcome to Pocket Pantry. Easily track your preserved goods with their ingredients and expiration dates, get weekly reminders of what needs to be eaten soon, & see at a glance what's available.</h2>" +
-
-"<p>To get started, click on 'Add Item' under the 'My Pantry' tab. Each time you pull from your pantry, log it using the 'consume' button on the item page. In the future, you'll be able to see a visualization of when you've consumed your items, giving you more data to plan your future food needs.</p>" +
-
-"<p>Whenever you make more of something, use the 'add' button on the item page. Use a few different ingredients? 'Copy' the item, give it a slightly different name, and log your latest creation.</p>" +
-
-"<p class='about-small'>On the 'My Account' tab, you can edit your notification settings. By default, you will be sent a weekly e-mail listing any items expiring in the next two weeks. You're welcome to turn off these e-mails, as well as change what you see as 'expiring soon.' (Want to see everything that expires in the next month? Just change that setting to '4 weeks' instead of the default 2!)</p>";
 
 // aboutHTML +=
 //  "<div class='divider'></div>" +
@@ -90,7 +80,6 @@ var displayAbout = function () {
 
   $('#header').text("About Pocket Pantry");
   $('.about').show();
-  $('.about').html(aboutHTML);
 };
 
 //
@@ -381,6 +370,7 @@ var submitEditAccount = function () {
 // 
 
 var displayPantry = function () {
+  $('.main').hide();
   $('.pantry').show();
   $('.pantry').html("<div class='loading-message'>Hold tight. Your pantry is loading.</div>");
   $('#header').text(localStorage.getItem('name') + "'s Pantry");
@@ -830,7 +820,7 @@ $(document).ready(function () {
     displaySplash();
   });
 
-  $('.navbar').add('.pantryitem').on('click', '.curr-pantry-link', function () {
+  $('.navbar').add('.item-buttons').on('click', '.curr-pantry-link', function () {
     $('.main').hide();
     displayPantry();
   });
