@@ -553,7 +553,7 @@ var displayMyAccount = function (user) {
       "<button class='btn btn-default acct-btn delete-account'>Delete Account</button>" +
     "</div></div>";
 
-  $('#header').text(localStorage.name + "'s Account");
+  $('#header').text(user['name'] + "'s Account");
   $('.account').html(accountHTML);
 };
 
