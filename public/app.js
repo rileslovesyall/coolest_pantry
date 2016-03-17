@@ -32,8 +32,8 @@ var setNavbar = function () {
 // HELPER METHODS
 //
 
-// var baseURL = "http://localhost:9393";
-var baseURL = "https://api.pocketpantry.org";
+var baseURL = "http://localhost:9393";
+// var baseURL = "https://api.pocketpantry.org";
 
 var cleanDate = function(dateString) {
   var myDateArray = dateString.split("-");
@@ -229,7 +229,6 @@ var submitLogin = function () {
     if (data['error'] === undefined) {
       localStorage.token = data['token'];
       localStorage.uid = data['uid'];
-      localStorage.name = data['name'];
       localStorage.user = JSON.stringify(data);
       setNavbar();
       $('.form-holder').hide();
@@ -282,7 +281,7 @@ var submitSignup = function () {
       localStorage.token = data['user']['api_token'];
       localStorage.uid = data['user']['id'];
       localStorage.name = data['user']['name'];
-      localStorage.user = JSON.stringify(data);
+      localStorage.user = JSON.stringify(data['user']);
       $('.form-holder').hide();
       setNavbar();
       displayPantry();
@@ -352,7 +351,7 @@ var submitEditAccount = function () {
       flashMessage("We're sorry. Something went wrong with your update.");
     } else {
       flashMessage("Your account has been updated.");
-      localStorage.user = JSON.stringify(data['user']);display
+      localStorage.user = JSON.stringify(data['user']);
     }
   })
   .fail(function (data) {
@@ -686,7 +685,7 @@ var addConsumeItem = function(id, action, quantity) {
           currItem['quantity'] -= 1;
         }
         localStorage.setItem('pantryitem' + id, JSON.stringify(currItem));
-        if (action == 'add') {
+        if (action === 'add') {
           flashMessage("You have " + action + "ed " + quantity + " " + currItem['name'] + "(s) to your inventory.");
         } else {
           flashMessage("You have " + action + "d " + quantity + " " + currItem['name'] + "(s) from your inventory.");

@@ -102,7 +102,6 @@ body {
   height: 97%;
   background-color: #454545;
   z-index: 1;
-   These three lines are for transparency in all browsers. 
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
   opacity: .5;
@@ -183,7 +182,7 @@ th {
   padding-top: 17px;
 }
 
-.table>tbody>tr>td.td-not-button {
+.table>tbody>tr>.td-not-button {
   font-size: 18px;
   padding-top: 13px;
 }
