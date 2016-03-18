@@ -71,13 +71,6 @@ var displaySplash = function () {
 // 
 
 var displayAbout = function () {
-
-// aboutHTML +=
-//  "<div class='divider'></div>" +
-//  "<h1 class='header'>About the Creator</h1>" +
-
-//  "<h2>Pocket Pantry was created by <a href='http://rileyspicer.com'>Riley Spicer</a> as a capstone project for <a href='http://adadevelopersacademy.org'>Ada Developer's Academy</a>.</h2>";
-
   $('#header').text("About Pocket Pantry");
   $('.about').show();
 };
@@ -601,6 +594,7 @@ var displaySingleItem = function (id, item, ingredients) {
   }
   var pantryitemHtml = description +
     "<div class='pantryitem-show quantity-show' id="+id+"> Available Quantity: " + item['quantity'] + "</div>" +
+    "<div class='pantryitem-show portion-show' id="+id+">Portion Size: "+item['portion']+"</div>" +
     ingHtml +
     "<div class='row'>";
       if (item['quantity'] > 0) {
@@ -622,7 +616,7 @@ var displaySingleItem = function (id, item, ingredients) {
     "</div></div>";
   $('.pantryitem').show();
   $('.pantryitem').html(pantryitemHtml);
-  $('.item-buttons').show();2
+  $('.item-buttons').show();
   $('.item-buttons').html(buttonsHtml);
 };
 
