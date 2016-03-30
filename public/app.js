@@ -33,7 +33,7 @@ var setNavbar = function () {
 //
 
 // var baseURL = "http://localhost:9393";
-var baseURL = "https://api.pocketpantry.org";
+var baseURL = "https://pantryapi.herokuapp.com";
 
 var cleanDate = function(dateString) {
   var myDateArray = dateString.split("-");
